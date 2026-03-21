@@ -29,7 +29,7 @@ async function init() {
 
     // Leemos y ejecutamos el SQL del esquema
     const sqlPath = path.join(__dirname, '..', '..', 'fotaza2.sql')
-    const sql     = fs.readFileSync(sqlPath, 'utf8')
+    let sql     = fs.readFileSync(sqlPath, 'utf8')
 
     // Quitamos las líneas DELIMITER ya que multipleStatements las maneja
     sql = sql
