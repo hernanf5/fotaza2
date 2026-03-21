@@ -13,6 +13,7 @@ async function init() {
       port:     process.env.DB_PORT,
       user:     process.env.DB_USER,
       password: process.env.DB_PASSWORD,
+      multipleStatements: true,
     })
 
     console.log('Conectado a MySQL')
@@ -30,15 +31,23 @@ async function init() {
     const sqlPath = path.join(__dirname, '..', '..', 'fotaza2.sql')
     const sql     = fs.readFileSync(sqlPath, 'utf8')
 
-    // Separamos por punto y coma para ejecutar cada sentencia
-    const statements = sql
-      .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--') && !s.startsWith('DELIMITER'))
+    // Quitamos las líneas DELIMITER ya que multipleStatements las maneja
+    sql = sql
+      .replace(/DELIMITER \$\$/g, '')
+      .replace(/DELIMITER ;/g, '')
+      .replace(/\$\$/g, ';')
 
-    for (const statement of statements) {
-      await connection.query(statement)
-    }
+    // Separamos por punto y coma para ejecutar cada sentencia
+    // const statements = sql
+    //   .split(';')
+    //   .map(s => s.trim())
+    //   .filter(s => s.length > 0 && !s.startsWith('--') && !s.startsWith('DELIMITER'))
+
+    // for (const statement of statements) {
+    //   await connection.query(statement)
+    // }
+
+    await connection.query(sql)
 
     console.log('Esquema creado correctamente')
     console.log('Base de datos inicializada. Ya podés correr npm start')
