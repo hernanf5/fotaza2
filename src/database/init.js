@@ -15,14 +15,14 @@ async function init() {
       password: process.env.DB_PASSWORD,
     })
 
-    console.log('✓ Conectado a MySQL')
+    console.log('Conectado a MySQL')
 
     // Creamos la base de datos si no existe
     await connection.query(
       `CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`
        CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
     )
-    console.log(`✓ Base de datos '${process.env.DB_NAME}' lista`)
+    console.log(`Base de datos '${process.env.DB_NAME}' lista`)
 
     await connection.query(`USE \`${process.env.DB_NAME}\``)
 
@@ -40,11 +40,11 @@ async function init() {
       await connection.query(statement)
     }
 
-    console.log('✓ Esquema creado correctamente')
-    console.log('✓ Base de datos inicializada. Ya podés correr npm start')
+    console.log('Esquema creado correctamente')
+    console.log('Base de datos inicializada. Ya podés correr npm start')
 
   } catch (error) {
-    console.error('✗ Error al inicializar la base de datos:', error.message)
+    console.error('Error al inicializar la base de datos:', error.message)
     process.exit(1)
   } finally {
     if (connection) await connection.end()
