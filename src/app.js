@@ -37,8 +37,10 @@ app.use((req, res, next) => {
 })
 
 // Rutas
+const authRoutes = require('./routes/auth')
+app.use('/', authRoutes)
 app.get('/', (req, res) => {
-  res.render('index', { titulo: 'Fotaza 2' })
+  res.render('index', { titulo: 'Inicio' })
 })
 
 // Puerto

@@ -37,16 +37,6 @@ async function init() {
       .replace(/DELIMITER ;/g, '')
       .replace(/\$\$/g, ';')
 
-    // Separamos por punto y coma para ejecutar cada sentencia
-    // const statements = sql
-    //   .split(';')
-    //   .map(s => s.trim())
-    //   .filter(s => s.length > 0 && !s.startsWith('--') && !s.startsWith('DELIMITER'))
-
-    // for (const statement of statements) {
-    //   await connection.query(statement)
-    // }
-
     await connection.query(sql)
 
     console.log('Esquema creado correctamente')

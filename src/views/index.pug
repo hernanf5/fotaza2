@@ -1,8 +1,26 @@
-doctype html
-html(lang='es')
-  head
-    meta(charset='UTF-8')
-    title= titulo
-  body
-    h1 Bienvenido a #{titulo}
-    p El servidor está funcionando.
+extends layout
+
+block contenido
+  main(class='flex h-screen items-center justify-center bg-background')
+    div(class='text-center space-y-4')
+      h1(class='font-headline font-black text-4xl text-cyan-400 tracking-tighter') Fotaza 2
+      if usuario
+        p(class='text-on-surface-variant')
+          | Bienvenido, 
+          span(class='text-primary font-semibold')= usuario.username
+        form(action='/logout' method='POST' class='mt-4')
+          button(
+            type='submit'
+            class='bg-primary text-on-primary font-headline font-bold px-6 py-3 rounded-xl hover:bg-primary-container transition-all'
+          ) Cerrar sesión
+      else
+        p(class='text-on-surface-variant') Tu comunidad de fotografía.
+        div(class='flex gap-4 justify-center mt-4')
+          a(
+            href='/login'
+            class='bg-primary text-on-primary font-headline font-bold px-6 py-3 rounded-xl hover:bg-primary-container transition-all'
+          ) Iniciar sesión
+          a(
+            href='/register'
+            class='border border-outline text-on-surface font-headline font-bold px-6 py-3 rounded-xl hover:bg-surface-container transition-all'
+          ) Registrarse

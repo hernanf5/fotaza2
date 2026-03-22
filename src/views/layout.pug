@@ -1,0 +1,70 @@
+doctype html
+html(class='dark' lang='es')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title= titulo + ' | Fotaza 2'
+    script(src='https://cdn.tailwindcss.com?plugins=forms,container-queries')
+    link(href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap' rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap' rel='stylesheet')
+    script.
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#0a1215",
+              "secondary-container": "#1e293b",
+              "on-primary-container": "#ffffff",
+              "surface-container-low": "#14252b",
+              "surface-dim": "#0d181c",
+              "surface-container-highest": "#2e4650",
+              "surface-bright": "#1a2c33",
+              "surface-container": "#1b2d35",
+              "on-primary": "#ffffff",
+              "on-surface-variant": "#94a3b8",
+              "on-background": "#f1f5f9",
+              "error-container": "#991b1b",
+              "primary": "#13b6ec",
+              "surface-tint": "#13b6ec",
+              "primary-fixed": "#bae6fd",
+              "on-error-container": "#fee2e2",
+              "error": "#ef4444",
+              "surface-variant": "#1e293b",
+              "background": "#101d22",
+              "primary-container": "#0e87af",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#e2e8f0",
+              "surface-container-high": "#243942",
+              "inverse-primary": "#006686",
+              "on-surface": "#f1f5f9",
+              "outline-variant": "#1e293b",
+              "outline": "#334155",
+              "primary-fixed-dim": "#7dd3fc",
+              "surface": "#101d22",
+              "secondary": "#a2cce4",
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    style.
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-panel {
+        background: rgba(16, 29, 34, 0.8);
+        backdrop-filter: blur(12px);
+      }
+  body(class='bg-background text-on-background font-body antialiased')
+    block contenido

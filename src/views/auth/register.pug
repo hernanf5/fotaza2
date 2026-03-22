@@ -1,0 +1,135 @@
+extends ../layout
+
+block contenido
+  main(class='flex min-h-screen')
+
+    //- Panel izquierdo
+    section(class='hidden lg:flex lg:w-1/2 relative overflow-hidden group')
+      div(class='absolute inset-0 bg-gradient-to-r from-background/40 to-transparent z-10')
+      img(
+        alt='Fotaza 2'
+        class='absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105'
+        src='https://lh3.googleusercontent.com/aida-public/AB6AXuB61_xua1cm4QHW6Tg00-20WImyA8UYlvM3LOved9B5WUQsfYjugXyj5DYlyqbT5cywk573QBySkUdGmnY3Dv7_oIx5SJar-dAR57zhXAuntsCURJKhR9dgljKECg_5KoJy03n-pqYmWDQfmt3UYHJszhP0eSX-n2TYsUd49Rjr7hXTQ9mv_mN_t25zFHJhJ7oNT75v4qufeZH-4HOMKe5aRZx9dlvTrPuNafGO-rULuUFbrVY-HJHNmrRqkJuJGFoH-kAcgDyoTL7m'
+      )
+      div(class='relative z-20 flex flex-col justify-between p-12 h-full')
+        div
+          span(class='text-primary font-headline font-black text-3xl tracking-tighter') Fotaza 2
+        div(class='max-w-md')
+          h2(class='font-headline text-5xl font-bold tracking-tight mb-4 leading-tight')
+            | Navegá la 
+            span(class='text-primary') Frontera Digital.
+          p(class='text-on-surface-variant text-lg leading-relaxed')
+            | Uníte a la comunidad creativa que redefine la fotografía digital.
+        div(class='flex items-center gap-4 text-on-surface-variant text-sm font-label')
+          span(class='flex items-center gap-1')
+            span(class='material-symbols-outlined text-primary text-base') verified
+            | Creadores verificados
+          span(class='w-1 h-1 rounded-full bg-outline')
+          span Experiencia curada
+
+    //- Panel derecho: formulario
+    section(class='w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-surface relative')
+      div(class='absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px]')
+      div(class='w-full max-w-md z-10')
+
+        div(class='mb-10 lg:hidden')
+          span(class='text-primary font-headline font-black text-2xl tracking-tighter') Fotaza 2
+
+        header(class='mb-8')
+          h1(class='font-headline text-3xl font-bold tracking-tight mb-2') Creá tu cuenta
+          p(class='text-on-surface-variant') Empezá tu viaje en la comunidad.
+
+        //- Flash messages
+        if error && error.length
+          div(class='mb-6 bg-error-container text-on-error-container text-sm px-4 py-3 rounded-xl')
+            each msg in error
+              p= msg
+
+        form(action='/register' method='POST' class='space-y-5')
+
+          //- Nombre y apellido
+          div(class='grid grid-cols-1 sm:grid-cols-2 gap-4')
+            div(class='space-y-2')
+              label(class='block text-sm font-medium text-on-surface ml-1' for='nombre') Nombre *
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') person
+                input(
+                  class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                  id='nombre' name='nombre' type='text' placeholder='Tu nombre' required
+                )
+            div(class='space-y-2')
+              label(class='block text-sm font-medium text-on-surface ml-1' for='apellido') Apellido *
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') person
+                input(
+                  class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                  id='apellido' name='apellido' type='text' placeholder='Tu apellido' required
+                )
+
+          //- Username
+          div(class='space-y-2')
+            label(class='block text-sm font-medium text-on-surface ml-1' for='username') Nombre de usuario *
+            div(class='relative group')
+              span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') alternate_email
+              input(
+                class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                id='username' name='username' type='text' placeholder='usuario123' required
+              )
+
+          //- Email
+          div(class='space-y-2')
+            label(class='block text-sm font-medium text-on-surface ml-1' for='email') Email *
+            div(class='relative group')
+              span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') mail
+              input(
+                class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                id='email' name='email' type='email' placeholder='nombre@email.com' required
+              )
+
+          //- Contraseñas
+          div(class='grid grid-cols-1 sm:grid-cols-2 gap-4')
+            div(class='space-y-2')
+              label(class='block text-sm font-medium text-on-surface ml-1' for='password') Contraseña *
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') lock
+                input(
+                  class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                  id='password' name='password' type='password' placeholder='••••••••' required
+                )
+            div(class='space-y-2')
+              label(class='block text-sm font-medium text-on-surface ml-1' for='confirmar_password') Confirmá *
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') lock_reset
+                input(
+                  class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                  id='confirmar_password' name='confirmar_password' type='password' placeholder='••••••••' required
+                )
+
+          //- Campos opcionales
+          div(class='grid grid-cols-1 sm:grid-cols-2 gap-4')
+            div(class='space-y-2')
+              label(class='block text-sm font-medium text-on-surface ml-1' for='telefono') Teléfono
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') phone
+                input(
+                  class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                  id='telefono' name='telefono' type='tel' placeholder='+54 9 ...'
+                )
+            div(class='space-y-2')
+              label(class='block text-sm font-medium text-on-surface ml-1' for='fecha_nacimiento') Fecha de nac.
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') cake
+                input(
+                  class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3.5 text-on-surface placeholder:text-on-surface-variant/50 transition-all'
+                  id='fecha_nacimiento' name='fecha_nacimiento' type='date'
+                )
+
+          button(
+            type='submit'
+            class='w-full bg-primary hover:bg-primary/90 text-on-primary font-headline font-bold py-4 rounded-xl shadow-lg transition-all active:scale-[0.98] mt-2'
+          ) Crear cuenta
+
+        div(class='mt-8 text-center')
+          p(class='text-on-surface-variant text-sm')
+            | ¿Ya tenés cuenta?
+            a(href='/login' class='text-primary font-semibold hover:underline ml-1') Iniciá sesión

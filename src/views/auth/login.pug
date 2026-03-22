@@ -1,0 +1,79 @@
+extends ../layout
+
+block contenido
+  main(class='flex h-screen w-full')
+
+    //- Panel izquierdo
+    section(class='hidden lg:flex lg:w-1/2 relative overflow-hidden group')
+      img(
+        alt='Fotaza 2'
+        class='absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105'
+        src='https://lh3.googleusercontent.com/aida-public/AB6AXuAYxnoIstHbKC6brhCYO3GB5BJEvjpOq7sANiD-sH9TIGHgPEgh2QJM4Gae8m4RJGOgOL7l_nE-hzGuo7_2qYbJFQ9Ue4AyKchGsXXyPlzMynu-LRkqAgPlzy2omz70NgRXCBDcA24BfKQchRgSKFMORJioddYWJ1IItZVbqPqAgtTpmcK13fTCjQ2Yqex1-8S3na5fjULGlbV4IZ6fUO4qKxTyYXpTV5N63v65NlTzl7YT_mlG9cUeyjSefS_ovn93hUubpPPKd9Id'
+      )
+      div(class='absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent')
+      div(class='relative z-10 flex flex-col justify-between p-12 h-full')
+        div
+          h1(class='font-headline font-black text-3xl text-cyan-400 tracking-tighter') Fotaza 2
+        div(class='max-w-md')
+          p(class='font-headline font-bold text-4xl leading-tight tracking-tight text-white mb-4')
+            | Capture the light, share the vision.
+          p(class='text-on-surface-variant text-lg')
+            | Uníte a la comunidad de creadores que redefinen la fotografía digital.
+
+    //- Panel derecho: formulario
+    section(class='w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24 bg-surface')
+      div(class='w-full max-w-md space-y-10')
+
+        div(class='text-center lg:text-left space-y-3')
+          div(class='lg:hidden mb-8')
+            span(class='font-headline font-black text-2xl text-cyan-400 tracking-tighter') Fotaza 2
+          h2(class='font-headline font-bold text-3xl tracking-tight text-on-surface') Bienvenido de nuevo
+          p(class='text-on-surface-variant font-label') Ingresá tus credenciales para acceder.
+
+        //- Flash messages
+        if error && error.length
+          div(class='bg-error-container text-on-error-container text-sm px-4 py-3 rounded-xl')
+            each msg in error
+              p= msg
+
+        if success && success.length
+          div(class='bg-teal-800 text-teal-100 text-sm px-4 py-3 rounded-xl')
+            each msg in success
+              p= msg
+
+        form(action='/login' method='POST' class='space-y-6')
+          div(class='space-y-4')
+
+            div(class='space-y-2')
+              label(class='text-sm font-medium text-on-surface-variant px-1' for='email') Email
+              div(class='relative group')
+                div(class='absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors')
+                  span(class='material-symbols-outlined') mail
+                input(
+                  class='block w-full pl-12 pr-4 py-3 bg-surface-container border border-outline-variant rounded-xl text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all'
+                  id='email' name='email' type='email' placeholder='nombre@email.com' required
+                )
+
+            div(class='space-y-2')
+              div(class='flex justify-between items-center px-1')
+                label(class='text-sm font-medium text-on-surface-variant' for='password') Contraseña
+              div(class='relative group')
+                div(class='absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors')
+                  span(class='material-symbols-outlined') lock
+                input(
+                  class='block w-full pl-12 pr-4 py-3 bg-surface-container border border-outline-variant rounded-xl text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all'
+                  id='password' name='password' type='password' placeholder='••••••••' required
+                )
+
+          button(
+            type='submit'
+            class='w-full bg-primary text-on-primary font-headline font-bold py-4 rounded-xl hover:bg-primary-container active:scale-[0.98] transition-all'
+          ) Iniciar sesión
+
+        div(class='text-center')
+          p(class='text-sm text-on-surface-variant font-label')
+            | ¿No tenés cuenta?
+            a(href='/register' class='font-bold text-cyan-400 hover:text-primary transition-colors ml-1') Registrate
+
+  div(class='fixed top-0 right-0 -z-10 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none')
+  div(class='fixed bottom-0 left-0 -z-10 w-96 h-96 bg-cyan-400/5 rounded-full blur-[120px] pointer-events-none')
