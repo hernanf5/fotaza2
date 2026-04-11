@@ -1,26 +1,155 @@
 extends layout
 
 block contenido
-  main(class='flex h-screen items-center justify-center bg-background')
-    div(class='text-center space-y-4')
-      h1(class='font-headline font-black text-4xl text-cyan-400 tracking-tighter') Fotaza 2
-      if usuario
-        p(class='text-on-surface-variant')
-          | Bienvenido, 
-          span(class='text-primary font-semibold')= usuario.username
-        form(action='/logout' method='POST' class='mt-4')
-          button(
-            type='submit'
-            class='bg-primary text-on-primary font-headline font-bold px-6 py-3 rounded-xl hover:bg-primary-container transition-all'
-          ) Cerrar sesión
-      else
-        p(class='text-on-surface-variant') Tu comunidad de fotografía.
-        div(class='flex gap-4 justify-center mt-4')
-          a(
-            href='/login'
-            class='bg-primary text-on-primary font-headline font-bold px-6 py-3 rounded-xl hover:bg-primary-container transition-all'
-          ) Iniciar sesión
-          a(
-            href='/register'
-            class='border border-outline text-on-surface font-headline font-bold px-6 py-3 rounded-xl hover:bg-surface-container transition-all'
-          ) Registrarse
+  div(class='relative flex min-h-screen w-full flex-col overflow-x-hidden')
+
+    //- Navbar
+    header(class='flex items-center justify-between whitespace-nowrap border-b border-outline-variant px-6 lg:px-10 py-3 sticky top-0 z-50 bg-background/90 backdrop-blur-md')
+      div(class='flex items-center gap-8')
+        div(class='flex items-center gap-4 text-primary')
+          h2(class='text-primary text-lg font-bold leading-tight tracking-[-0.015em]') Fotaza 2
+        label(class='hidden md:flex flex-col min-w-40 h-10 max-w-64')
+          div(class='flex w-full flex-1 items-stretch rounded-lg h-full')
+            div(class='text-on-surface-variant flex border-none bg-surface-container items-center justify-center pl-4 rounded-l-lg')
+              span(class='material-symbols-outlined text-xl') search
+            input(
+              class='flex w-full min-w-0 flex-1 bg-surface-container text-on-surface focus:outline-0 focus:ring-0 border-none h-full placeholder:text-on-surface-variant px-4 rounded-r-lg text-sm'
+              placeholder='Buscar...'
+            )
+
+      div(class='flex flex-1 justify-end gap-8')
+        div(class='flex gap-2')
+          button(class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+            span(class='material-symbols-outlined text-xl') notifications
+          if usuario
+            a(href='#' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+              span(class='material-symbols-outlined text-xl') person
+            form(action='/logout' method='POST' class='flex items-center')
+              button(type='submit' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+                span(class='material-symbols-outlined text-xl') logout
+          else
+            a(href='/login' class='text-sm font-medium text-primary') Iniciar sesión
+
+    div(class='flex flex-1')
+
+      //- Sidebar
+      aside(class='hidden lg:flex w-64 flex-col border-r border-outline-variant h-[calc(100vh-57px)] sticky top-[57px] bg-background p-4 shrink-0 overflow-y-auto')
+        div(class='flex flex-col gap-6')
+          div(class='flex flex-col')
+            h3(class='text-on-surface text-base font-medium mb-1') Navegación
+            p(class='text-on-surface-variant text-sm') Explorá la comunidad
+          div(class='flex flex-col gap-1')
+            a(href='/' class='flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary')
+              span(class='material-symbols-outlined text-2xl') home
+              span(class='text-sm font-medium') Inicio
+            a(href='#' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') group
+              span(class='text-sm font-medium') Usuarios que sigo
+            a(href='#' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') bookmark
+              span(class='text-sm font-medium') Colecciones
+            if usuario
+              a(href='/publicaciones/nueva' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+                span(class='material-symbols-outlined text-2xl') add_photo_alternate
+                span(class='text-sm font-medium') Nueva publicación
+
+      //- Contenido principal
+      main(class='flex-1 flex flex-col max-w-7xl mx-auto w-full')
+        div(class='p-6 lg:p-8')
+
+          //- Buscador
+          div(class='mb-8')
+            label(class='flex flex-col w-full h-14')
+              div(class='flex w-full flex-1 items-stretch rounded-xl h-full border border-outline-variant focus-within:border-primary transition-colors')
+                div(class='text-on-surface-variant flex bg-surface items-center justify-center pl-5 rounded-l-xl')
+                  span(class='material-symbols-outlined text-2xl') search
+                input(
+                  class='flex w-full min-w-0 flex-1 bg-surface text-on-surface focus:outline-0 border-none px-4 rounded-r-xl text-base placeholder:text-on-surface-variant'
+                  placeholder='Buscá imágenes y publicaciones...'
+                )
+            div(class='flex gap-3 mt-4 flex-wrap')
+              button(class='flex h-9 items-center justify-center gap-2 rounded-lg bg-surface-container border border-outline-variant px-4 hover:bg-surface-container-high transition-colors')
+                span(class='text-on-surface-variant text-sm font-medium') Categoría
+                span(class='material-symbols-outlined text-lg text-on-surface-variant') arrow_drop_down
+              button(class='flex h-9 items-center justify-center gap-2 rounded-lg bg-surface-container border border-outline-variant px-4 hover:bg-surface-container-high transition-colors')
+                span(class='text-on-surface-variant text-sm font-medium') Licencia
+                span(class='material-symbols-outlined text-lg text-on-surface-variant') arrow_drop_down
+              button(class='flex h-9 items-center justify-center gap-2 rounded-lg bg-surface-container border border-outline-variant px-4 hover:bg-surface-container-high transition-colors')
+                span(class='text-on-surface-variant text-sm font-medium') Valoración
+                span(class='material-symbols-outlined text-lg text-on-surface-variant') arrow_drop_down
+
+          //- Sección tendencias
+          div(class='mb-12')
+            div(class='flex items-center justify-between mb-6')
+              h2(class='text-on-surface text-2xl font-bold leading-tight tracking-tight') Tendencias
+              a(href='#' class='text-primary hover:text-primary-container text-sm font-medium') Ver todas
+
+            div(class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6')
+
+              //- Card 1
+              div(class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary transition-all hover:bg-surface-container')
+                div(class='relative aspect-video w-full overflow-hidden')
+                  div(
+                    class='absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105'
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOO2-PC1BWYbS2xtk7oAeUcqYrZXzqkxTy6etpKyWhg2dZS7rzQUbhVRRFHzK3bWs84Dc7Hovz7SpRAaPxaZjLBHzp0MhV0fyGp6NnJgZogt0YD_2xiaPFk22FsG3SllGS0_vn7-PIymDaRqGMxOAGFh15ADJPSGNiItn-r7NfYpoNhkaEOyNevIrKiIdMJQcwCrnEmYJE_uhhh4LSQGWXPU3vLJkeB4N8BFJySOiaXVBrkr06u5ArBeJVVwwhemWZ6HkXNRaizJ6Q')"
+                  )
+                  div(class='absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1')
+                    span(class='material-symbols-outlined text-primary text-sm') star
+                    span(class='text-white text-xs font-medium') 4.9
+                div(class='p-4')
+                  h3(class='text-on-surface font-medium text-base mb-1 truncate') Foto 1
+                  p(class='text-on-surface-variant text-sm mb-4') 1.2k votos
+                  button(class='w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2 rounded-lg font-medium text-sm hover:bg-primary-container transition-colors')
+                    span(class='material-symbols-outlined text-lg') favorite
+                    | Me Interesa
+
+              //- Card 2
+              div(class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary transition-all hover:bg-surface-container')
+                div(class='relative aspect-video w-full overflow-hidden')
+                  div(
+                    class='absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105'
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOO2-PC1BWYbS2xtk7oAeUcqYrZXzqkxTy6etpKyWhg2dZS7rzQUbhVRRFHzK3bWs84Dc7Hovz7SpRAaPxaZjLBHzp0MhV0fyGp6NnJgZogt0YD_2xiaPFk22FsG3SllGS0_vn7-PIymDaRqGMxOAGFh15ADJPSGNiItn-r7NfYpoNhkaEOyNevIrKiIdMJQcwCrnEmYJE_uhhh4LSQGWXPU3vLJkeB4N8BFJySOiaXVBrkr06u5ArBeJVVwwhemWZ6HkXNRaizJ6Q')"
+                  )
+                  div(class='absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1')
+                    span(class='material-symbols-outlined text-primary text-sm') star
+                    span(class='text-white text-xs font-medium') 4.9
+                div(class='p-4')
+                  h3(class='text-on-surface font-medium text-base mb-1 truncate') Foto 2
+                  p(class='text-on-surface-variant text-sm mb-4') 1.2k votos
+                  button(class='w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2 rounded-lg font-medium text-sm hover:bg-primary-container transition-colors')
+                    span(class='material-symbols-outlined text-lg') favorite
+                    | Me Interesa
+
+              //- Card 3
+              div(class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary transition-all hover:bg-surface-container')
+                div(class='relative aspect-video w-full overflow-hidden')
+                  div(
+                    class='absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105'
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOO2-PC1BWYbS2xtk7oAeUcqYrZXzqkxTy6etpKyWhg2dZS7rzQUbhVRRFHzK3bWs84Dc7Hovz7SpRAaPxaZjLBHzp0MhV0fyGp6NnJgZogt0YD_2xiaPFk22FsG3SllGS0_vn7-PIymDaRqGMxOAGFh15ADJPSGNiItn-r7NfYpoNhkaEOyNevIrKiIdMJQcwCrnEmYJE_uhhh4LSQGWXPU3vLJkeB4N8BFJySOiaXVBrkr06u5ArBeJVVwwhemWZ6HkXNRaizJ6Q')"
+                  )
+                  div(class='absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1')
+                    span(class='material-symbols-outlined text-primary text-sm') star
+                    span(class='text-white text-xs font-medium') 4.9
+                div(class='p-4')
+                  h3(class='text-on-surface font-medium text-base mb-1 truncate') Foto 3
+                  p(class='text-on-surface-variant text-sm mb-4') 1.2k votos
+                  button(class='w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2 rounded-lg font-medium text-sm hover:bg-primary-container transition-colors')
+                    span(class='material-symbols-outlined text-lg') favorite
+                    | Me Interesa
+
+              //- Card 4
+              div(class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary transition-all hover:bg-surface-container')
+                div(class='relative aspect-video w-full overflow-hidden')
+                  div(
+                    class='absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105'
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCOO2-PC1BWYbS2xtk7oAeUcqYrZXzqkxTy6etpKyWhg2dZS7rzQUbhVRRFHzK3bWs84Dc7Hovz7SpRAaPxaZjLBHzp0MhV0fyGp6NnJgZogt0YD_2xiaPFk22FsG3SllGS0_vn7-PIymDaRqGMxOAGFh15ADJPSGNiItn-r7NfYpoNhkaEOyNevIrKiIdMJQcwCrnEmYJE_uhhh4LSQGWXPU3vLJkeB4N8BFJySOiaXVBrkr06u5ArBeJVVwwhemWZ6HkXNRaizJ6Q')"
+                  )
+                  div(class='absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1')
+                    span(class='material-symbols-outlined text-primary text-sm') star
+                    span(class='text-white text-xs font-medium') 4.9
+                div(class='p-4')
+                  h3(class='text-on-surface font-medium text-base mb-1 truncate') Foto 4
+                  p(class='text-on-surface-variant text-sm mb-4') 1.2k votos
+                  button(class='w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2 rounded-lg font-medium text-sm hover:bg-primary-container transition-colors')
+                    span(class='material-symbols-outlined text-lg') favorite
+                    | Me Interesa
