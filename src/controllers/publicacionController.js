@@ -73,6 +73,11 @@ const publicacionController = {
         const imagenes  = await Publicacion.obtenerImagenes(publicacion.id)
         const etiquetas = await Publicacion.obtenerEtiquetas(publicacion.id)
 
+        imagenes.forEach(img => {
+            img.valoracion_promedio = parseFloat(img.valoracion_promedio) || 0
+            img.total_valoraciones  = parseInt(img.total_valoraciones)    || 0
+        })
+
         res.render('publicaciones/ver', {
             titulo: publicacion.titulo,
             publicacion,
