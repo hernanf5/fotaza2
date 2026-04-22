@@ -4,8 +4,18 @@ const publicacionController = require('../controllers/publicacionController')
 const { requerirLogin } = require('../middlewares/auth')
 const upload = require('../middlewares/upload')
 
+function handleUpload(req, res, next) {
+    upload.array('imagenes', 10)(req, res, (err) => {
+        if (err) {
+        req.flash('error', err.message)
+        return res.redirect('/publicaciones/nueva')
+        }
+        next()
+    })
+}
+
 router.get('/publicaciones/nueva', requerirLogin, publicacionController.mostrarFormulario)
-router.post('/publicaciones', requerirLogin, upload.array('imagenes', 10), publicacionController.crear)
+router.post('/publicaciones', requerirLogin, handleUpload, publicacionController.crear)
 router.get('/publicaciones/:id', publicacionController.ver)
 
 module.exports = router
