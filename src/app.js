@@ -3,6 +3,7 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const path = require('path')
 const publicacionRoutes = require('./routes/publicaciones')
+const comentarioRoutes = require('./routes/comentarios')
 require('dotenv').config()
 
 const app = express()
@@ -44,6 +45,7 @@ app.get('/', (req, res) => {
   res.render('index', { titulo: 'Inicio' })
 })
 app.use('/', publicacionRoutes)
+app.use('/', comentarioRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 3000

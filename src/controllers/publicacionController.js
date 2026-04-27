@@ -1,5 +1,6 @@
 const Publicacion = require('../models/Publicacion')
 const Imagen = require('../models/Imagen')
+const Comentario = require('../models/Comentario')
 const path = require('path')
 const fs = require('fs')
 
@@ -72,6 +73,7 @@ const publicacionController = {
 
         const imagenes  = await Publicacion.obtenerImagenes(publicacion.id)
         const etiquetas = await Publicacion.obtenerEtiquetas(publicacion.id)
+        const comentarios = await Comentario.obtenerDePublicacion(publicacion.id)
 
         imagenes.forEach(img => {
             img.valoracion_promedio = parseFloat(img.valoracion_promedio) || 0
@@ -83,6 +85,7 @@ const publicacionController = {
             publicacion,
             imagenes,
             etiquetas,
+            comentarios,
         })
 
         } catch (error) {
