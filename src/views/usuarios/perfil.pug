@@ -1,0 +1,83 @@
+extends ../layout
+
+block contenido
+  div(class='relative flex min-h-screen w-full flex-col overflow-x-hidden')
+
+    //- Navbar
+    header(class='flex items-center justify-between whitespace-nowrap border-b border-outline-variant px-6 lg:px-10 py-3 sticky top-0 z-50 bg-background/90 backdrop-blur-md')
+      div(class='flex items-center gap-4')
+        a(href='/' class='text-primary font-bold text-lg tracking-[-0.015em]') Fotaza 2
+      div(class='flex items-center gap-2')
+        if usuario
+          span(class='text-on-surface-variant text-sm hidden md:block')= usuario.username
+          form(action='/logout' method='POST' class='flex items-center')
+            button(type='submit' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+              span(class='material-symbols-outlined text-xl') logout
+        else
+          a(href='/login' class='flex items-center justify-center h-10 px-4 rounded-lg bg-surface-container text-primary text-sm font-medium hover:bg-surface-container-high transition-colors') Iniciar sesión
+
+    main(class='flex-1 max-w-4xl mx-auto w-full p-6 lg:p-8')
+
+      //- Flash messages
+      if error && error.length
+        div(class='mb-6 bg-error-container text-on-error-container text-sm px-4 py-3 rounded-xl')
+          each msg in error
+            p= msg
+
+      //- Cabecera del perfil
+      div(class='bg-surface rounded-xl border border-outline-variant p-6 mb-8')
+        div(class='flex items-center justify-between')
+          div(class='flex items-center gap-4')
+            div(class='w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center')
+              span(class='material-symbols-outlined text-primary text-3xl') person
+            div
+              h1(class='text-on-surface text-xl font-bold')= '@' + perfil.username
+              p(class='text-on-surface-variant text-sm')= perfil.nombre + ' ' + perfil.apellido
+
+          //- Botón seguir/dejar de seguir
+          if usuario && usuario.id !== perfil.id
+            if estaSiguiendo
+              form(action='/usuarios/' + perfil.id + '/dejar-de-seguir' method='POST')
+                button(
+                  type='submit'
+                  class='flex items-center gap-2 px-4 py-2 rounded-lg border border-outline text-on-surface-variant text-sm font-medium hover:bg-surface-container transition-colors'
+                )
+                  span(class='material-symbols-outlined text-base') person_remove
+                  | Dejar de seguir
+            else
+              form(action='/usuarios/' + perfil.id + '/seguir' method='POST')
+                button(
+                  type='submit'
+                  class='flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-medium hover:bg-primary-container transition-colors'
+                )
+                  span(class='material-symbols-outlined text-base') person_add
+                  | Seguir
+
+        //- Contadores
+        div(class='flex gap-8 mt-6 pt-6 border-t border-outline-variant')
+          div(class='text-center')
+            p(class='text-on-surface text-xl font-bold')= publicaciones.length
+            p(class='text-on-surface-variant text-sm') Publicaciones
+          div(class='text-center')
+            p(class='text-on-surface text-xl font-bold')= seguidores
+            p(class='text-on-surface-variant text-sm') Seguidores
+          div(class='text-center')
+            p(class='text-on-surface text-xl font-bold')= seguidos
+            p(class='text-on-surface-variant text-sm') Siguiendo
+
+      //- Publicaciones del usuario
+      h2(class='text-on-surface text-lg font-bold mb-4') Publicaciones
+      if publicaciones && publicaciones.length
+        div(class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6')
+          each pub in publicaciones
+            a(href='/publicaciones/' + pub.id class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary hover:bg-surface-container transition-all')
+              if pub.imagen_portada
+                div(class='relative aspect-video w-full overflow-hidden')
+                  img(src=pub.imagen_portada alt=pub.titulo class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105')
+              div(class='p-4')
+                h3(class='text-on-surface font-medium text-base mb-1 truncate')= pub.titulo
+                p(class='text-on-surface-variant text-xs')= new Date(pub.created_at).toLocaleDateString('es-AR')
+      else
+        div(class='bg-surface-container rounded-xl p-8 text-center border border-outline-variant')
+          span(class='material-symbols-outlined text-4xl text-on-surface-variant') photo_library
+          p(class='text-on-surface-variant text-sm mt-2') Este usuario no tiene publicaciones todavía.
