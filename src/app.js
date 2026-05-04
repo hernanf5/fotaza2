@@ -4,6 +4,7 @@ const flash = require('connect-flash')
 const path = require('path')
 const publicacionRoutes = require('./routes/publicaciones')
 const comentarioRoutes = require('./routes/comentarios')
+const valoracionRoutes = require('./routes/valoraciones')
 require('dotenv').config()
 
 const app = express()
@@ -46,6 +47,7 @@ app.get('/', (req, res) => {
 })
 app.use('/', publicacionRoutes)
 app.use('/', comentarioRoutes)
+app.use('/', valoracionRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 3000

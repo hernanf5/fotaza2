@@ -76,9 +76,21 @@ block contenido
                     span(class='material-symbols-outlined text-xs') lock_open
                     | Libre uso
                 if usuario && usuario.id !== publicacion.usuario_id
-                  button(class='flex items-center gap-1 bg-primary text-on-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary-container transition-colors font-medium')
-                    span(class='material-symbols-outlined text-sm') favorite
-                    | Me interesa
+                  div(class='flex items-center gap-3')
+                    //- Valoración con estrellas
+                    form(action='/imagenes/' + imagen.id + '/valorar' method='POST' class='flex items-center gap-1')
+                      each estrella in [1,2,3,4,5]
+                        button(
+                          type='submit'
+                          name='puntuacion'
+                          value=estrella
+                          class='text-on-surface-variant hover:text-primary transition-colors'
+                        )
+                          span(class='material-symbols-outlined text-lg') star
+                    //- Me interesa
+                    button(class='flex items-center gap-1 bg-primary text-on-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary-container transition-colors font-medium')
+                      span(class='material-symbols-outlined text-sm') favorite
+                      | Me interesa
 
       //- Descripción
       if publicacion.descripcion

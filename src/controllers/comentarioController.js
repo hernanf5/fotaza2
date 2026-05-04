@@ -68,6 +68,35 @@ const comentarioController = {
         }
     },
 
+    // POST /publicaciones/:id/comentarios/:comentarioId/eliminar
+    async eliminar(req, res) {
+    const publicacion_id = req.params.id
+    const comentario_id  = req.params.comentarioId
+
+    try {
+        const comentario = await Comentario.buscarPorId(comentario_id)
+
+        if (!comentario) {
+        req.flash('error', 'Comentario no encontrado')
+        return res.redirect('/publicaciones/' + publicacion_id)
+        }
+
+        // Solo el autor de la publicación puede borrar comentarios
+        if (comentario.autor_publicacion_id !== req.session.usuario.id) {
+        req.flash('error', 'No tenés permiso para hacer esto')
+        return res.redirect('/publicaciones/' + publicacion_id)
+        }
+
+        await Comentario.eliminar(comentario_id)
+        res.redirect('/publicaciones/' + publicacion_id)
+
+    } catch (error) {
+        console.error(error)
+        req.flash('error', 'Ocurrió un error al eliminar el comentario')
+        res.redirect('/publicaciones/' + publicacion_id)
+    }
+    },
+
 }
 
 module.exports = comentarioController

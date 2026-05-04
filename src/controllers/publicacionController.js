@@ -80,6 +80,14 @@ const publicacionController = {
             img.total_valoraciones  = parseInt(img.total_valoraciones)    || 0
         })
 
+        // Verificar si el usuario ya valoró cada imagen
+        if (req.session.usuario) {
+        for (const img of imagenes) {
+            const valoracion = await Imagen.obtenerValoracionDeUsuario(img.id, req.session.usuario.id)
+            img.valoracion_usuario = valoracion ? valoracion.puntuacion : null
+        }
+}
+
         res.render('publicaciones/ver', {
             titulo: publicacion.titulo,
             publicacion,
