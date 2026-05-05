@@ -1,5 +1,6 @@
 const Comentario = require('../models/Comentario')
 const Publicacion = require('../models/Publicacion')
+const Notificacion = require('../models/Notificacion')
 
 const comentarioController = {
 
@@ -30,6 +31,13 @@ const comentarioController = {
             publicacion_id,
             usuario_id: req.session.usuario.id,
             contenido:  contenido.trim(),
+        })
+
+        await Notificacion.crear({
+            usuario_id:        publicacion.usuario_id,
+            origen_usuario_id: req.session.usuario.id,
+            tipo:              'comentario',
+            referencia_id:     publicacion_id,
         })
 
         res.redirect('/publicaciones/' + publicacion_id)

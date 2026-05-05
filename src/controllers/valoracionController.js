@@ -1,4 +1,5 @@
 const Imagen = require('../models/Imagen')
+const Notificacion = require('../models/Notificacion')
 
 const valoracionController = {
 
@@ -36,6 +37,13 @@ const valoracionController = {
         await Imagen.valorar({ imagen_id, usuario_id, puntuacion })
         req.flash('success', 'Valoración registrada')
         res.redirect(redirigir)
+
+        await Notificacion.crear({
+            usuario_id:        imagen.usuario_id,
+            origen_usuario_id: usuario_id,
+            tipo:              'valoracion',
+            referencia_id:     imagen_id,
+        })
 
         } catch (error) {
         console.error(error)

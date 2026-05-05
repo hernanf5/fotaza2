@@ -1,4 +1,5 @@
 const Follower = require('../models/Follower')
+const Notificacion = require('../models/Notificacion')
 
 const followerController = {
 
@@ -14,6 +15,12 @@ const followerController = {
 
         try {
         await Follower.seguir({ seguidor_id, seguido_id })
+        await Notificacion.crear({
+            usuario_id:        seguido_id,
+            origen_usuario_id: seguidor_id,
+            tipo:              'nuevo_seguidor',
+            referencia_id:     null,
+        })
         res.redirect('/usuarios/' + seguido_id)
         } catch (error) {
         console.error(error)
