@@ -111,6 +111,48 @@ const coleccionController = {
         }
     },
 
+    // GET /colecciones/elegir/:publicacion_id
+    async elegir(req, res) {
+        try {
+            const colecciones = await Coleccion.obtenerDeUsuario(req.session.usuario.id)
+            res.render('colecciones/elegir', {
+            titulo:         'Guardar en colección',
+            colecciones,
+            publicacion_id: req.params.publicacion_id,
+            })
+        } catch (error) {
+            console.error(error)
+            req.flash('error', 'Ocurrió un error')
+            res.redirect('/')
+        }
+    },
+
+    // POST /colecciones/nueva-y-guardar
+    async crearYGuardar(req, res) {
+        const { nombre, publicacion_id } = req.body
+
+        if (!nombre || !nombre.trim()) {
+            req.flash('error', 'El nombre de la colección es obligatorio')
+            return res.redirect('/colecciones/elegir/' + publicacion_id)
+        }
+
+        try {
+            const coleccion_id = await Coleccion.crear({
+            usuario_id: req.session.usuario.id,
+            nombre:     nombre.trim(),
+            })
+
+            await Coleccion.agregarPublicacion({ coleccion_id, publicacion_id })
+            req.flash('success', 'Colección creada y publicación guardada')
+            res.redirect('/publicaciones/' + publicacion_id)
+
+        } catch (error) {
+            console.error(error)
+            req.flash('error', 'Ocurrió un error')
+            res.redirect('/colecciones/elegir/' + publicacion_id)
+        }
+    },
+
 }
 
 module.exports = coleccionController
