@@ -8,6 +8,7 @@ const valoracionRoutes = require('./routes/valoraciones')
 const usuarioRoutes = require('./routes/usuarios')
 const notificacionRoutes = require('./routes/notificaciones')
 const coleccionRoutes = require('./routes/colecciones')
+const mensajeRoutes = require('./routes/mensajes')
 require('dotenv').config()
 
 const app = express()
@@ -54,6 +55,7 @@ app.use('/', valoracionRoutes)
 app.use('/', usuarioRoutes)
 app.use('/', notificacionRoutes)
 app.use('/', coleccionRoutes)
+app.use('/', mensajeRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 3000

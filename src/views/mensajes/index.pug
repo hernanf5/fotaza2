@@ -1,0 +1,38 @@
+extends ../layout
+
+block contenido
+  div(class='relative flex min-h-screen w-full flex-col overflow-x-hidden')
+
+    //- Navbar
+    header(class='flex items-center justify-between whitespace-nowrap border-b border-outline-variant px-6 lg:px-10 py-3 sticky top-0 z-50 bg-background/90 backdrop-blur-md')
+      div(class='flex items-center gap-4')
+        a(href='/' class='text-primary font-bold text-lg tracking-[-0.015em]') Fotaza 2
+      div(class='flex items-center gap-2')
+        if usuario
+          span(class='text-on-surface-variant text-sm hidden md:block')= usuario.username
+          form(action='/logout' method='POST' class='flex items-center')
+            button(type='submit' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+              span(class='material-symbols-outlined text-xl') logout
+
+    main(class='flex-1 max-w-2xl mx-auto w-full p-6 lg:p-8')
+
+      h1(class='text-on-surface text-2xl font-bold tracking-tight mb-8') Mensajes
+
+      if conversaciones && conversaciones.length
+        div(class='flex flex-col gap-3')
+          each conv in conversaciones
+            a(href='/mensajes/' + conv.otro_usuario_id class='flex items-center gap-4 p-4 bg-surface rounded-xl border border-outline-variant hover:border-primary hover:bg-surface-container transition-all')
+              div(class='w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0')
+                span(class='material-symbols-outlined text-primary') person
+              div(class='flex-1 min-w-0')
+                div(class='flex items-center justify-between')
+                  p(class='text-on-surface text-sm font-medium')= '@' + conv.otro_username
+                  p(class='text-on-surface-variant text-xs')= new Date(conv.ultimo_mensaje_fecha).toLocaleDateString('es-AR')
+                p(class='text-on-surface-variant text-xs truncate mt-1')= conv.ultimo_mensaje
+              if conv.no_leidos > 0
+                span(class='flex-shrink-0 bg-primary text-on-primary text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center')= conv.no_leidos
+      else
+        div(class='bg-surface-container rounded-xl p-12 text-center border border-outline-variant')
+          span(class='material-symbols-outlined text-4xl text-on-surface-variant') chat_bubble_outline
+          p(class='text-on-surface-variant text-sm mt-2') No tenés conversaciones todavía.
+          p(class='text-on-surface-variant text-xs mt-1') Marcá "me interesa" en una imagen para iniciar una.
