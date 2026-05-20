@@ -9,6 +9,8 @@ const usuarioRoutes = require('./routes/usuarios')
 const notificacionRoutes = require('./routes/notificaciones')
 const coleccionRoutes = require('./routes/colecciones')
 const mensajeRoutes = require('./routes/mensajes')
+const Notificacion = require('./models/Notificacion')
+const Mensaje = require('./models/Mensaje')
 require('dotenv').config()
 
 const app = express()
@@ -29,17 +31,31 @@ app.use(session({
   secret:            process.env.SESSION_SECRET,
   resave:            false,
   saveUninitialized: false,
-  cookie: { secure: false } // en producción cambiar a true con HTTPS
+  cookie: { secure: false } // cambiar a true con HTTPS
 }))
 
 // Flash messages
 app.use(flash())
 
-// Variables globales disponibles en todas las vistas
-app.use((req, res, next) => {
+// Variables globales para vistas
+app.use(async (req, res, next) => {
   res.locals.usuario    = req.session.usuario || null
   res.locals.success    = req.flash('success')
   res.locals.error      = req.flash('error')
+
+  // contadores del navbar
+  if (req.session.usuario){
+    try {
+      res.locals.notificaciones_no_leidas = await Notificacion.contarNoLeidas(req.session.usuario.id)
+      res.locals.mensajes_no_leidos = await Mensaje.contarNoLeidos(req.session.usuario.id)
+    } catch (e) {
+      res.locals.notificaciones_no_leidas = 0
+      res.locals.mensajes_no_leidos = 0
+    }
+  } else {
+    res.locals.notificaciones_no_leidas = 0
+    res.locals.mensajes_no_leidos = 0
+  }
   next()
 })
 

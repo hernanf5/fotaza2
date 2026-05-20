@@ -31,8 +31,8 @@ class Notificacion {
         `SELECT COUNT(*) as total FROM notificacion
         WHERE usuario_id = ? AND leida = 0`,
         [usuario_id]
-        )
-        return rows[0].total
+        ) 
+        return parseInt(rows[0].total)
     }
 
     static async marcarComoLeida(id, usuario_id) {

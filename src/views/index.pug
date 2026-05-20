@@ -19,10 +19,14 @@ block contenido
 
       div(class='flex flex-1 justify-end gap-8')
         div(class='flex gap-2')
-          a(href='/notificaciones' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+          a(href='/notificaciones' class='relative flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
             span(class='material-symbols-outlined text-xl') notifications
-          a(href='/mensajes' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+            if notificaciones_no_leidas > 0
+              span(class='absolute -top-1 -right-1 bg-primary text-on-primary text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center')= notificaciones_no_leidas
+          a(href='/mensajes' class='relative flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
             span(class='material-symbols-outlined text-xl') chat_bubble_outline
+            if mensajes_no_leidos > 0
+              span(class='absolute -top-1 -right-1 bg-primary text-on-primary text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center')= mensajes_no_leidos
           if usuario
             a(href='#' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
               span(class='material-symbols-outlined text-xl') person
