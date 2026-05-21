@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const publicacionController = require('../controllers/publicacionController')
 const { requerirLogin } = require('../middlewares/auth')
-const upload = require('../middlewares/upload')
+const {upload, procesarImagenes} = require('../middlewares/upload')
 
 function handleUpload(req, res, next) {
     upload.array('imagenes', 10)(req, res, (err) => {
@@ -15,7 +15,7 @@ function handleUpload(req, res, next) {
 }
 
 router.get('/publicaciones/nueva', requerirLogin, publicacionController.mostrarFormulario)
-router.post('/publicaciones', requerirLogin, handleUpload, publicacionController.crear)
+router.post('/publicaciones', requerirLogin, handleUpload, procesarImagenes, publicacionController.crear)
 router.get('/publicaciones/:id', publicacionController.ver)
 
 module.exports = router

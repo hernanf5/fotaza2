@@ -96,7 +96,7 @@ block contenido
                 h3(class='text-on-surface font-medium text-base mb-1 truncate')= pub.titulo
                 div(class='flex items-center justify-between')
                   span(class='text-on-surface-variant text-xs')= '@' + pub.username
-                  span(class='text-on-surface-variant text-xs')= total_comentarios + ' comentarios'
+                  span(class='text-on-surface-variant text-xs')= pub.total_comentarios + ' comentarios'
 
         //- Paginación
         if totalPaginas > 1
