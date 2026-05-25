@@ -34,16 +34,23 @@ block contenido
       div(class='mb-6')
         div(class='flex items-center justify-between mb-2')
           h1(class='text-on-surface text-2xl font-bold tracking-tight')= publicacion.titulo
-          if usuario && usuario.id === publicacion.usuario_id
-            div(class='flex gap-2')
-              form(action='/publicaciones/' + publicacion.id + '/comentarios/toggle' method='POST')
-                button(
-                  type='submit'
-                  class='flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm hover:bg-surface-container-high transition-colors'
-                )
-                  span(class='material-symbols-outlined text-base') 
-                    = publicacion.comentarios_abiertos ? 'comments_disabled' : 'comment'
-                  | #{publicacion.comentarios_abiertos ? 'Cerrar comentarios' : 'Abrir comentarios'}
+          div(class='flex items-center gap-3')
+            if usuario && usuario.id !== publicacion.usuario_id
+              a(
+                href='/publicaciones/' + publicacion.id + '/denunciar'
+                class='flex items-center gap-1 text-on-surface-variant hover:text-error text-xs transition-colors'
+              )
+                span(class='material-symbols-outlined text-sm') flag
+                | Denunciar
+            if usuario && usuario.id === publicacion.usuario_id
+              div(class='flex gap-2')
+                form(action='/publicaciones/' + publicacion.id + '/comentarios/toggle' method='POST')
+                  button(
+                    type='submit'
+                    class='flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-container text-on-surface-variant text-sm hover:bg-surface-container-high transition-colors'
+                  )
+                    span(class='material-symbols-outlined text-base')= publicacion.comentarios_abiertos ? 'comments_disabled' : 'comment'
+                    | #{publicacion.comentarios_abiertos ? 'Cerrar comentarios' : 'Abrir comentarios'}
 
         div(class='flex items-center gap-3 text-on-surface-variant text-sm')
           span(class='material-symbols-outlined text-base') person
@@ -77,7 +84,6 @@ block contenido
                     | Libre uso
                 if usuario && usuario.id !== publicacion.usuario_id
                   div(class='flex items-center gap-3')
-                    //- Valoración con estrellas
                     form(action='/imagenes/' + imagen.id + '/valorar' method='POST' class='flex items-center gap-1')
                       each estrella in [1,2,3,4,5]
                         button(
@@ -87,7 +93,6 @@ block contenido
                           class='text-on-surface-variant hover:text-primary transition-colors'
                         )
                           span(class='material-symbols-outlined text-lg') star
-                    //- Me interesa
                     form(action='/imagenes/' + imagen.id + '/me-interesa' method='POST')
                       button(
                         type='submit'
@@ -95,7 +100,6 @@ block contenido
                       )
                         span(class='material-symbols-outlined text-sm') favorite
                         | Me interesa
-                      // - Guardar en colección
                     a(href='/colecciones/elegir/' + publicacion.id class='flex items-center gap-1 bg-surface-container text-on-surface-variant text-xs px-3 py-1.5 rounded-lg hover:bg-surface-container-high hover:text-primary transition-colors font-medium')
                       span(class='material-symbols-outlined text-sm') bookmark
                       | Guardar
@@ -128,7 +132,7 @@ block contenido
               | ¿Querés comentar?
               a(href='/login' class='text-primary font-medium ml-1') Iniciá sesión
 
-        //- Lista de comentarios 
+        //- Lista de comentarios
         div(class='flex flex-col gap-4')
           if comentarios && comentarios.length
             each comentario in comentarios
@@ -138,10 +142,18 @@ block contenido
                     span(class='material-symbols-outlined text-on-surface-variant text-base') person
                     span(class='text-on-surface text-sm font-medium')= '@' + comentario.username
                     span(class='text-on-surface-variant text-xs')= new Date(comentario.created_at).toLocaleDateString('es-AR')
-                  if usuario && usuario.id === publicacion.usuario_id
-                    form(action='/publicaciones/' + publicacion.id + '/comentarios/' + comentario.id + '/eliminar' method='POST')
-                      button(type='submit' class='text-on-surface-variant hover:text-error transition-colors')
-                        span(class='material-symbols-outlined text-base') delete
+                  div(class='flex items-center gap-2')
+                    if usuario && usuario.id !== comentario.usuario_id
+                      a(
+                        href='/publicaciones/' + publicacion.id + '/comentarios/' + comentario.id + '/denunciar'
+                        class='text-on-surface-variant hover:text-error transition-colors'
+                        title='Denunciar comentario'
+                      )
+                        span(class='material-symbols-outlined text-base') flag
+                    if usuario && usuario.id === publicacion.usuario_id
+                      form(action='/publicaciones/' + publicacion.id + '/comentarios/' + comentario.id + '/eliminar' method='POST')
+                        button(type='submit' class='text-on-surface-variant hover:text-error transition-colors')
+                          span(class='material-symbols-outlined text-base') delete
                 p(class='text-on-surface text-sm leading-relaxed')= comentario.contenido
           else
             p(class='text-on-surface-variant text-sm text-center py-4') No hay comentarios todavía.
