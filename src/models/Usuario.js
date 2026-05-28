@@ -79,6 +79,19 @@ class Usuario {
         return bcrypt.compare(passwordPlano, passwordHash)
     }
 
+
+    // Validador 
+    static async buscarValidadorPorEmail(email) {
+        const [rows] = await pool.query(
+            `SELECT v.id, v.persona_id,
+                    p.nombre, p.apellido, p.email, p.password_hash
+            FROM validador v
+            JOIN persona p ON p.id = v.persona_id
+            WHERE p.email = ?`,
+            [email]
+        )
+        return rows[0] || null
+    }
 }
 
 module.exports = Usuario

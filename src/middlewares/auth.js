@@ -17,6 +17,15 @@ const authMiddleware = {
     next()
   },
 
+  // Verifica que el usuario sea un validador
+  requerirValidador(req, res, next) {
+  if (!req.session.usuario || req.session.usuario.rol !== 'validador') {
+    req.flash('error', 'Acceso restringido')
+    return res.redirect('/login')
+  }
+  next()
+},
+
 }
 
 module.exports = authMiddleware

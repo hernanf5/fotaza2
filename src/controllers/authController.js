@@ -67,25 +67,45 @@ const authController = {
         }
 
         try {
-            const usuario = await Usuario.buscarPorEmail(email)
+            let usuario = await Usuario.buscarPorEmail(email)
+            let esValidador = false
+
+            if(!usuario) {
+                usuario =  await Usuario.buscarValidadorPorEmail(email)
+                esValidador = true
+            }
+
 
             if (!usuario) {
                 req.flash('error', 'Email o contraseña incorrectos')
                 return res.redirect('/login')
             }
 
-            if (usuario.estado === 'inactivo') {
+            if (!esValidador && usuario.estado === 'inactivo') {
                 req.flash('error', 'Tu cuenta está inactiva')
                 return res.redirect('/login')
             }
 
             const passwordOk = await Usuario.verificarPassword(password, usuario.password_hash)
+
             if (!passwordOk) {
                 req.flash('error', 'Email o contraseña incorrectos')
                 return res.redirect('/login')
             }
 
-            // Guardamos en sesión sin el password
+            // Guardo sesion de usuario o validador
+
+            if (esValidador) {
+                req.session.usuario = {
+                    id:          usuario.id,
+                    nombre:      usuario.nombre,
+                    apellido:    usuario.apellido,
+                    email:       usuario.email,
+                    rol:         'validador',
+                }
+                return res.redirect('/validador')
+            }
+
             req.session.usuario = {
                 id:        usuario.id,
                 username:  usuario.username,
@@ -93,6 +113,7 @@ const authController = {
                 apellido:  usuario.apellido,
                 email:     usuario.email,
                 avatar_url: usuario.avatar_url,
+                rol:       'usuario',
             }
 
             res.redirect('/')

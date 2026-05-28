@@ -13,6 +13,8 @@ const Notificacion = require('./models/Notificacion')
 const Mensaje = require('./models/Mensaje')
 const buscarRoutes = require('./routes/buscar')
 const denunciaRoutes = require('./routes/denuncias')
+const Publicacion = require('./models/Publicacion')
+const validadorRoutes = require('./routes/validador')
 
 require('dotenv').config()
 
@@ -65,8 +67,24 @@ app.use(async (req, res, next) => {
 // Rutas
 const authRoutes = require('./routes/auth')
 app.use('/', authRoutes)
-app.get('/', (req, res) => {
-  res.render('index', { titulo: 'Inicio' })
+app.get('/', async (req, res) => {
+  try {
+    const destacadas = await Publicacion.listarDestacadas({ limite: 4 })
+    const recientes  = await Publicacion.listarRecientes({ limite: 8 })
+
+    res.render('index', {
+      titulo: 'Inicio',
+      destacadas,
+      recientes,
+    })
+  } catch (error) {
+    console.error(error)
+    res.render('index', {
+      titulo:     'Inicio',
+      destacadas: [],
+      recientes:  [],
+    })
+  }
 })
 app.use('/', publicacionRoutes)
 app.use('/', comentarioRoutes)
@@ -77,6 +95,7 @@ app.use('/', coleccionRoutes)
 app.use('/', mensajeRoutes)
 app.use('/', buscarRoutes)
 app.use('/', denunciaRoutes)
+app.use('/', validadorRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 3000

@@ -2,6 +2,13 @@ const pool = require('../database/connection')
 
 class Publicacion {
 
+    static async cambiarEstado(id, estado) {
+        await pool.query(
+            `UPDATE publicacion SET estado = ? WHERE id = ?`,
+            [estado, id]
+        )
+    }
+
     static async crear({ usuario_id, titulo, descripcion }) {
         const [result] = await pool.query(
             `INSERT INTO publicacion (usuario_id, titulo, descripcion)
