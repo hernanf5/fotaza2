@@ -15,6 +15,7 @@ const buscarRoutes = require('./routes/buscar')
 const denunciaRoutes = require('./routes/denuncias')
 const Publicacion = require('./models/Publicacion')
 const validadorRoutes = require('./routes/validador')
+const siguiendoRoutes = require('./routes/siguiendo')
 
 require('dotenv').config()
 
@@ -96,6 +97,7 @@ app.use('/', mensajeRoutes)
 app.use('/', buscarRoutes)
 app.use('/', denunciaRoutes)
 app.use('/', validadorRoutes)
+app.use('/', siguiendoRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 3000

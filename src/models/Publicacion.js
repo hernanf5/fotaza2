@@ -138,6 +138,24 @@ class Publicacion {
         )
     }
 
+    static async listarDeSeguidos(usuario_id, { limite = 20, offset = 0 } = {}) {
+        const [rows] = await pool.query(
+            `SELECT p.*, u.username, u.id as usuario_id,
+                    pe.avatar_url,
+                    (SELECT url FROM imagen WHERE publicacion_id = p.id LIMIT 1) as imagen_portada,
+                    (SELECT COUNT(*) FROM comentario WHERE publicacion_id = p.id AND activo = 1) as total_comentarios
+            FROM publicacion p
+            JOIN usuario u ON u.id = p.usuario_id
+            JOIN persona pe ON pe.id = u.persona_id
+            JOIN follower f ON f.seguido_id = p.usuario_id
+            WHERE f.seguidor_id = ? AND p.estado = 0
+            ORDER BY p.created_at DESC
+            LIMIT ? OFFSET ?`,
+            [usuario_id, limite, offset]
+        )
+        return rows
+    }
+
 }
 
 module.exports = Publicacion

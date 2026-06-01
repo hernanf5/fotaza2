@@ -54,7 +54,7 @@ block contenido
 
         div(class='flex items-center gap-3 text-on-surface-variant text-sm')
           span(class='material-symbols-outlined text-base') person
-          span= '@' + publicacion.username
+          a(href='/usuarios/' + publicacion.usuario_id class='hover:text-primary transition-colors')= '@' + publicacion.username
           span(class='text-outline') ·
           span= new Date(publicacion.created_at).toLocaleDateString('es-AR')
 
@@ -140,7 +140,7 @@ block contenido
                 div(class='flex items-center justify-between mb-2')
                   div(class='flex items-center gap-2')
                     span(class='material-symbols-outlined text-on-surface-variant text-base') person
-                    span(class='text-on-surface text-sm font-medium')= '@' + comentario.username
+                    a(href='/usuarios/' + comentario.usuario_id class='text-on-surface text-sm font-medium hover:text-primary transition-colors')= '@' + comentario.username
                     span(class='text-on-surface-variant text-xs')= new Date(comentario.created_at).toLocaleDateString('es-AR')
                   div(class='flex items-center gap-2')
                     if usuario && usuario.id !== comentario.usuario_id

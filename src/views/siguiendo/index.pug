@@ -9,7 +9,7 @@ block contenido
         a(href='/' class='text-primary font-bold text-lg tracking-[-0.015em]') Fotaza 2
       div(class='flex items-center gap-2')
         if usuario
-          span(class='text-on-surface-variant text-sm hidden md:block')= usuario.username
+          span(class='text-on-surface-variant text-sm hidden md:block center')= usuario.username
           a(href='/notificaciones' class='relative flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
             span(class='material-symbols-outlined text-xl') notifications
             if notificaciones_no_leidas > 0
@@ -34,10 +34,10 @@ block contenido
             a(href='/' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
               span(class='material-symbols-outlined text-2xl') home
               span(class='text-sm font-medium') Inicio
-            a(href='/siguiendo' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+            a(href='/siguiendo' class='flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary')
               span(class='material-symbols-outlined text-2xl') group
               span(class='text-sm font-medium') Usuarios que sigo
-            a(href='/colecciones' class='flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary')
+            a(href='/colecciones' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
               span(class='material-symbols-outlined text-2xl') bookmark
               span(class='text-sm font-medium') Colecciones
             if usuario
@@ -49,47 +49,29 @@ block contenido
       main(class='flex-1 flex flex-col max-w-7xl mx-auto w-full')
         div(class='p-6 lg:p-8')
 
-          //- Cabecera
-          div(class='flex items-center justify-between mb-8')
-            h1(class='text-on-surface text-2xl font-bold tracking-tight') Mis colecciones
+          div(class='mb-8')
+            h1(class='text-on-surface text-2xl font-bold tracking-tight mb-1') Usuarios que sigo
+            p(class='text-on-surface-variant text-sm') Publicaciones recientes de los usuarios que seguís.
 
-          //- Flash messages
-          if error && error.length
-            div(class='mb-6 bg-error-container text-on-error-container text-sm px-4 py-3 rounded-xl')
-              each msg in error
-                p= msg
-          if success && success.length
-            div(class='mb-6 bg-teal-900 text-teal-100 text-sm px-4 py-3 rounded-xl')
-              each msg in success
-                p= msg
-
-          //- Formulario nueva colección
-          form(action='/colecciones' method='POST' class='flex gap-3 mb-8')
-            div(class='relative group flex-1')
-              span(class='material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors') folder
-              input(
-                class='w-full bg-surface-container border-none focus:ring-2 focus:ring-primary rounded-xl pl-12 py-3 text-on-surface placeholder:text-on-surface-variant/50 transition-all text-sm'
-                name='nombre' type='text' placeholder='Nombre de la nueva colección' required
-              )
-            button(
-              type='submit'
-              class='bg-primary text-on-primary text-sm font-medium px-4 py-3 rounded-xl hover:bg-primary-container transition-colors'
-            ) Crear
-
-          //- Lista de colecciones
-          if colecciones && colecciones.length
-            div(class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6')
-              each col in colecciones
-                a(href='/colecciones/' + col.id class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary hover:bg-surface-container transition-all')
-                  div(class='relative aspect-video w-full overflow-hidden bg-surface-container-high flex items-center justify-center')
-                    if col.imagen_portada
-                      img(src=col.imagen_portada alt=col.nombre class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105')
+          if publicaciones && publicaciones.length
+            div(class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6')
+              each pub in publicaciones
+                a(href='/publicaciones/' + pub.id class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary hover:bg-surface-container transition-all')
+                  div(class='relative aspect-video w-full overflow-hidden')
+                    if pub.imagen_portada
+                      img(src=pub.imagen_portada alt=pub.titulo class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105')
                     else
-                      span(class='material-symbols-outlined text-4xl text-on-surface-variant') photo_library
+                      div(class='w-full h-full bg-surface-container-high flex items-center justify-center')
+                        span(class='material-symbols-outlined text-4xl text-on-surface-variant') image
                   div(class='p-4')
-                    h3(class='text-on-surface font-medium text-base mb-1 truncate')= col.nombre
-                    p(class='text-on-surface-variant text-xs')= col.total_publicaciones + ' publicaciones'
+                    h3(class='text-on-surface font-medium text-base mb-1 truncate')= pub.titulo
+                    p(class='text-on-surface-variant text-sm mb-4')= '@' + pub.username
+                    if usuario
+                      button(class='w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-2 rounded-lg font-medium text-sm hover:bg-primary-container transition-colors')
+                        span(class='material-symbols-outlined text-lg') bookmark
+                        | Guardar
           else
             div(class='bg-surface-container rounded-xl p-12 text-center border border-outline-variant')
-              span(class='material-symbols-outlined text-4xl text-on-surface-variant') folder_open
-              p(class='text-on-surface-variant text-sm mt-2') No tenés colecciones todavía. ¡Creá una!
+              span(class='material-symbols-outlined text-4xl text-on-surface-variant') group
+              p(class='text-on-surface-variant text-sm mt-2') No seguís a ningún usuario todavía.
+              a(href='/buscar' class='text-primary text-sm font-medium mt-2 inline-block') Descubrir usuarios
