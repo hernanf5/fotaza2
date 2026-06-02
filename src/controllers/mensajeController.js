@@ -2,6 +2,7 @@ const Mensaje = require('../models/Mensaje')
 const Imagen = require('../models/Imagen')
 const Usuario = require('../models/Usuario')
 const Notificacion = require('../models/Notificacion')
+const Publicacion = require('../models/Publicacion')
 
 const mensajeController = {
 
@@ -110,6 +111,16 @@ const mensajeController = {
         }
 
         await Imagen.marcarMeInteresa({ imagen_id, usuario_id })
+
+        const publicacion = await Publicacion.buscarPorId(imagen.publicacion_id)
+        const titulo = publicacion ? publicacion.titulo : 'tu imagen'
+
+        await Mensaje.crear({    
+            remitente_id: usuario_id,
+            destinatario_id: imagen.usuario_id,
+            imagen_id: imagen_id,
+            contenido: `Hola, me interesa adquirir tu imagen "${titulo}". ¿Podemos hablar?`,
+        })
 
         // Notificar al autor
         await Notificacion.crear({
