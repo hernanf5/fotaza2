@@ -14,116 +14,143 @@ block contenido
             span(class='material-symbols-outlined text-xl') notifications
             if notificaciones_no_leidas > 0
               span(class='absolute -top-1 -right-1 bg-primary text-on-primary text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center')= notificaciones_no_leidas
+          a(href='/mensajes' class='relative flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
+            span(class='material-symbols-outlined text-xl') chat_bubble_outline
+            if mensajes_no_leidos > 0
+              span(class='absolute -top-1 -right-1 bg-primary text-on-primary text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center')= mensajes_no_leidos
           form(action='/logout' method='POST' class='flex items-center')
             button(type='submit' class='flex items-center justify-center rounded-lg h-10 w-10 bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors')
               span(class='material-symbols-outlined text-xl') logout
         else
           a(href='/login' class='flex items-center justify-center h-10 px-4 rounded-lg bg-surface-container text-primary text-sm font-medium hover:bg-surface-container-high transition-colors') Iniciar sesión
 
-    main(class='flex-1 max-w-6xl mx-auto w-full p-6 lg:p-8')
+    div(class='flex flex-1')
 
-      //- Buscador
-      form(action='/buscar' method='GET' class='mb-8')
-        div(class='flex w-full flex-1 items-stretch rounded-xl h-14 border border-outline-variant focus-within:border-primary transition-colors mb-4')
-          div(class='text-on-surface-variant flex bg-surface items-center justify-center pl-5 rounded-l-xl')
-            span(class='material-symbols-outlined text-2xl') search
-          input(
-            class='flex w-full min-w-0 flex-1 bg-surface text-on-surface focus:outline-0 border-none px-4 rounded-r-xl text-base placeholder:text-on-surface-variant'
-            name='q' type='text' placeholder='Buscá imágenes y publicaciones...'
-            value=filtros.q || ''
-          )
-          button(
-            type='submit'
-            class='bg-primary text-on-primary font-medium px-6 rounded-r-xl hover:bg-primary-container transition-colors'
-          ) Buscar
+      //- Sidebar
+      aside(class='hidden lg:flex w-64 flex-col border-r border-outline-variant h-[calc(100vh-57px)] sticky top-[57px] bg-background p-4 shrink-0 overflow-y-auto')
+        div(class='flex flex-col gap-6')
+          div(class='flex flex-col')
+            h3(class='text-on-surface text-base font-medium mb-1') Navegación
+            p(class='text-on-surface-variant text-sm') Explorá la comunidad
+          div(class='flex flex-col gap-1')
+            a(href='/' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') home
+              span(class='text-sm font-medium') Inicio
+            a(href='/buscar' class='flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary')
+              span(class='material-symbols-outlined text-2xl') search
+              span(class='text-sm font-medium') Buscar
+            a(href='/siguiendo' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') group
+              span(class='text-sm font-medium') Usuarios que sigo
+            a(href='/colecciones' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') bookmark
+              span(class='text-sm font-medium') Colecciones
+            if usuario
+              a(href='/usuarios/' + usuario.id class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+                span(class='material-symbols-outlined text-2xl') person
+                span(class='text-sm font-medium') Mi perfil
+              a(href='/publicaciones/nueva' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+                span(class='material-symbols-outlined text-2xl') add_photo_alternate
+                span(class='text-sm font-medium') Nueva publicación
 
-        //- Filtros
-        div(class='flex gap-3 flex-wrap')
+      //- Contenido principal
+      main(class='flex-1 flex flex-col max-w-7xl mx-auto w-full')
+        div(class='p-6 lg:p-8')
 
-          //- Etiqueta
-          div(class='relative group')
-            span(class='material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-base') tag
-            input(
-              class='bg-surface-container border border-outline-variant rounded-lg pl-9 pr-4 py-2 text-on-surface text-sm placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors'
-              name='etiqueta' type='text' placeholder='Etiqueta'
-              value=filtros.etiqueta || ''
-            )
-
-          //- Licencia
-          select(
-            class='bg-surface-container border border-outline-variant rounded-lg px-4 py-2 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors'
-            name='licencia'
-          )
-            option(value='' selected=!filtros.licencia) Todas las licencias
-            option(value='libre' selected=filtros.licencia === 'libre') Sin copyright
-            option(value='copyright' selected=filtros.licencia === 'copyright') Con copyright
-
-          //- Valoración mínima
-          select(
-            class='bg-surface-container border border-outline-variant rounded-lg px-4 py-2 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors'
-            name='valoracion_min'
-          )
-            option(value='' selected=!filtros.valoracion_min) Cualquier valoración
-            option(value='3' selected=filtros.valoracion_min === '3') 3 estrellas o más
-            option(value='4' selected=filtros.valoracion_min === '4') 4 estrellas o más
-            option(value='4.5' selected=filtros.valoracion_min === '4.5') 4.5 estrellas o más
-
-          //- Orden
-          select(
-            class='bg-surface-container border border-outline-variant rounded-lg px-4 py-2 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors'
-            name='orden'
-          )
-            option(value='' selected=!filtros.orden) Más recientes
-            option(value='valoracion' selected=filtros.orden === 'valoracion') Mejor valoradas
-            option(value='votos' selected=filtros.orden === 'votos') Más votadas
-
-      //- Resultados
-      if filtros.q || filtros.etiqueta || filtros.licencia || filtros.valoracion_min
-        p(class='text-on-surface-variant text-sm mb-6')= total + ' resultado' + (total !== 1 ? 's' : '') + ' encontrado' + (total !== 1 ? 's' : '')
-
-      if publicaciones && publicaciones.length
-        div(class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8')
-          each pub in publicaciones
-            a(href='/publicaciones/' + pub.id class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary hover:bg-surface-container transition-all')
-              if pub.imagen_portada
-                div(class='relative aspect-video w-full overflow-hidden')
-                  img(src=pub.imagen_portada alt=pub.titulo class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105')
-                  if pub.mejor_valoracion > 0
-                    div(class='absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1')
-                      span(class='material-symbols-outlined text-primary text-sm') star
-                      span(class='text-white text-xs font-medium')= parseFloat(pub.mejor_valoracion).toFixed(1)
-              div(class='p-4')
-                h3(class='text-on-surface font-medium text-base mb-1 truncate')= pub.titulo
-                div(class='flex items-center justify-between')
-                  span(class='text-on-surface-variant text-xs')= '@' + pub.username
-                  span(class='text-on-surface-variant text-xs')= pub.total_comentarios + ' comentarios'
-
-        //- Paginación
-        if totalPaginas > 1
-          div(class='flex items-center justify-center gap-2')
-            if paginaActual > 1
-              a(
-                href='/buscar?' + new URLSearchParams({...filtros, pagina: paginaActual - 1}).toString()
-                class='flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors'
+          //- Buscador
+          form(action='/buscar' method='GET' class='mb-8')
+            div(class='flex w-full flex-1 items-stretch rounded-xl h-14 border border-outline-variant focus-within:border-primary transition-colors mb-4')
+              div(class='text-on-surface-variant flex bg-surface items-center justify-center pl-5 rounded-l-xl')
+                span(class='material-symbols-outlined text-2xl') search
+              input(
+                class='flex w-full min-w-0 flex-1 bg-surface text-on-surface focus:outline-0 border-none px-4 rounded-r-xl text-base placeholder:text-on-surface-variant'
+                name='q' type='text' placeholder='Buscá imágenes y publicaciones...'
+                value=filtros.q || ''
               )
-                span(class='material-symbols-outlined') chevron_left
-            each n in Array.from({length: totalPaginas}, (_, i) => i + 1)
-              a(
-                href='/buscar?' + new URLSearchParams({...filtros, pagina: n}).toString()
-                class='flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ' + (n === paginaActual ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high')
-              )= n
-            if paginaActual < totalPaginas
-              a(
-                href='/buscar?' + new URLSearchParams({...filtros, pagina: paginaActual + 1}).toString()
-                class='flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors'
-              )
-                span(class='material-symbols-outlined') chevron_right
+              button(
+                type='submit'
+                class='bg-primary text-on-primary font-medium px-6 rounded-r-xl hover:bg-primary-container transition-colors'
+              ) Buscar
 
-      else
-        div(class='bg-surface-container rounded-xl p-12 text-center border border-outline-variant')
-          span(class='material-symbols-outlined text-4xl text-on-surface-variant') search_off
-          p(class='text-on-surface-variant text-sm mt-2')
-            if filtros.q || filtros.etiqueta || filtros.licencia || filtros.valoracion_min
-              | No se encontraron resultados para tu búsqueda.
-            else
-              | Usá el buscador para encontrar publicaciones.
+            //- Filtros
+            div(class='flex gap-3 flex-wrap')
+              div(class='relative group')
+                span(class='material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-base') tag
+                input(
+                  class='bg-surface-container border border-outline-variant rounded-lg pl-9 pr-4 py-2 text-on-surface text-sm placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors'
+                  name='etiqueta' type='text' placeholder='Etiqueta'
+                  value=filtros.etiqueta || ''
+                )
+              select(
+                class='bg-surface-container border border-outline-variant rounded-lg px-4 py-2 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors'
+                name='licencia'
+              )
+                option(value='' selected=!filtros.licencia) Todas las licencias
+                option(value='libre' selected=filtros.licencia === 'libre') Sin copyright
+                option(value='copyright' selected=filtros.licencia === 'copyright') Con copyright
+              select(
+                class='bg-surface-container border border-outline-variant rounded-lg px-4 py-2 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors'
+                name='valoracion_min'
+              )
+                option(value='' selected=!filtros.valoracion_min) Cualquier valoración
+                option(value='3' selected=filtros.valoracion_min === '3') 3 estrellas o más
+                option(value='4' selected=filtros.valoracion_min === '4') 4 estrellas o más
+                option(value='4.5' selected=filtros.valoracion_min === '4.5') 4.5 estrellas o más
+              select(
+                class='bg-surface-container border border-outline-variant rounded-lg px-4 py-2 text-on-surface text-sm focus:outline-none focus:border-primary transition-colors'
+                name='orden'
+              )
+                option(value='' selected=!filtros.orden) Más recientes
+                option(value='valoracion' selected=filtros.orden === 'valoracion') Mejor valoradas
+                option(value='votos' selected=filtros.orden === 'votos') Más votadas
+
+          //- Resultados
+          if filtros.q || filtros.etiqueta || filtros.licencia || filtros.valoracion_min
+            p(class='text-on-surface-variant text-sm mb-6')= total + ' resultado' + (total !== 1 ? 's' : '') + ' encontrado' + (total !== 1 ? 's' : '')
+
+          if publicaciones && publicaciones.length
+            div(class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8')
+              each pub in publicaciones
+                a(href='/publicaciones/' + pub.id class='group flex flex-col bg-surface rounded-xl overflow-hidden border border-outline-variant hover:border-primary hover:bg-surface-container transition-all')
+                  if pub.imagen_portada
+                    div(class='relative aspect-video w-full overflow-hidden')
+                      img(src=pub.imagen_portada alt=pub.titulo class='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105')
+                      if pub.mejor_valoracion > 0
+                        div(class='absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1')
+                          span(class='material-symbols-outlined text-primary text-sm') star
+                          span(class='text-white text-xs font-medium')= parseFloat(pub.mejor_valoracion).toFixed(1)
+                  div(class='p-4')
+                    h3(class='text-on-surface font-medium text-base mb-1 truncate')= pub.titulo
+                    div(class='flex items-center justify-between')
+                      span(class='text-on-surface-variant text-xs')= '@' + pub.username
+                      span(class='text-on-surface-variant text-xs')= pub.total_comentarios + ' comentarios'
+
+            //- Paginación
+            if totalPaginas > 1
+              div(class='flex items-center justify-center gap-2')
+                if paginaActual > 1
+                  a(
+                    href='/buscar?' + new URLSearchParams({...filtros, pagina: paginaActual - 1}).toString()
+                    class='flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors'
+                  )
+                    span(class='material-symbols-outlined') chevron_left
+                each n in Array.from({length: totalPaginas}, (_, i) => i + 1)
+                  a(
+                    href='/buscar?' + new URLSearchParams({...filtros, pagina: n}).toString()
+                    class='flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-colors ' + (n === paginaActual ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high')
+                  )= n
+                if paginaActual < totalPaginas
+                  a(
+                    href='/buscar?' + new URLSearchParams({...filtros, pagina: paginaActual + 1}).toString()
+                    class='flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors'
+                  )
+                    span(class='material-symbols-outlined') chevron_right
+
+          else
+            div(class='bg-surface-container rounded-xl p-12 text-center border border-outline-variant')
+              span(class='material-symbols-outlined text-4xl text-on-surface-variant') search_off
+              p(class='text-on-surface-variant text-sm mt-2')
+                if filtros.q || filtros.etiqueta || filtros.licencia || filtros.valoracion_min
+                  | No se encontraron resultados para tu búsqueda.
+                else
+                  | Usá el buscador para encontrar publicaciones.

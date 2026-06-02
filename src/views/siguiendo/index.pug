@@ -34,6 +34,9 @@ block contenido
             a(href='/' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
               span(class='material-symbols-outlined text-2xl') home
               span(class='text-sm font-medium') Inicio
+            a(href='/buscar' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') search
+              span(class='text-sm font-medium') Buscar
             a(href='/siguiendo' class='flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary')
               span(class='material-symbols-outlined text-2xl') group
               span(class='text-sm font-medium') Usuarios que sigo
@@ -41,6 +44,9 @@ block contenido
               span(class='material-symbols-outlined text-2xl') bookmark
               span(class='text-sm font-medium') Colecciones
             if usuario
+              a(href='/usuarios/' + usuario.id class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+                span(class='material-symbols-outlined text-2xl') person
+                span(class='text-sm font-medium') Mi perfil
               a(href='/publicaciones/nueva' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
                 span(class='material-symbols-outlined text-2xl') add_photo_alternate
                 span(class='text-sm font-medium') Nueva publicación

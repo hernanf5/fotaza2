@@ -36,6 +36,9 @@ block contenido
             a(href='/' class='flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary')
               span(class='material-symbols-outlined text-2xl') home
               span(class='text-sm font-medium') Inicio
+            a(href='/buscar' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+              span(class='material-symbols-outlined text-2xl') search
+              span(class='text-sm font-medium') Buscar
             a(href='/siguiendo' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
               span(class='material-symbols-outlined text-2xl') group
               span(class='text-sm font-medium') Usuarios que sigo
@@ -43,6 +46,9 @@ block contenido
               span(class='material-symbols-outlined text-2xl') bookmark
               span(class='text-sm font-medium') Colecciones
             if usuario
+              a(href='/usuarios/' + usuario.id class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
+                span(class='material-symbols-outlined text-2xl') person
+                span(class='text-sm font-medium') Mi perfil
               a(href='/publicaciones/nueva' class='flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors')
                 span(class='material-symbols-outlined text-2xl') add_photo_alternate
                 span(class='text-sm font-medium') Nueva publicación
@@ -50,31 +56,6 @@ block contenido
       //- Contenido principal
       main(class='flex-1 flex flex-col max-w-7xl mx-auto w-full')
         div(class='p-6 lg:p-8')
-
-          //- Buscador
-          div(class='mb-8')
-            form(action='/buscar' method='GET')
-              div(class='flex w-full flex-1 items-stretch rounded-xl h-full border border-outline-variant focus-within:border-primary transition-colors')
-                div(class='text-on-surface-variant flex bg-surface items-center justify-center pl-5 rounded-l-xl')
-                  span(class='material-symbols-outlined text-2xl') search
-                input(
-                  class='flex w-full min-w-0 flex-1 bg-surface text-on-surface focus:outline-0 border-none px-4 rounded-r-xl text-base placeholder:text-on-surface-variant'
-                  placeholder='Buscá imágenes y publicaciones...'
-                )
-                button(
-                  type='submit'
-                  class='bg-primary text-on-primary font-medium px-6 rounded-r-xl hover:bg-primary-container transition-colors text-sm'
-                ) Buscar
-            div(class='flex gap-3 mt-4 flex-wrap')
-              button(class='flex h-9 items-center justify-center gap-2 rounded-lg bg-surface-container border border-outline-variant px-4 hover:bg-surface-container-high transition-colors')
-                span(class='text-on-surface-variant text-sm font-medium') Categoría
-                span(class='material-symbols-outlined text-lg text-on-surface-variant') arrow_drop_down
-              button(class='flex h-9 items-center justify-center gap-2 rounded-lg bg-surface-container border border-outline-variant px-4 hover:bg-surface-container-high transition-colors')
-                span(class='text-on-surface-variant text-sm font-medium') Licencia
-                span(class='material-symbols-outlined text-lg text-on-surface-variant') arrow_drop_down
-              button(class='flex h-9 items-center justify-center gap-2 rounded-lg bg-surface-container border border-outline-variant px-4 hover:bg-surface-container-high transition-colors')
-                span(class='text-on-surface-variant text-sm font-medium') Valoración
-                span(class='material-symbols-outlined text-lg text-on-surface-variant') arrow_drop_down
 
           //- Sección tendencias
           div(class='mb-12')
