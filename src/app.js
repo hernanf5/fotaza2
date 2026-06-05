@@ -70,8 +70,9 @@ const authRoutes = require('./routes/auth')
 app.use('/', authRoutes)
 app.get('/', async (req, res) => {
   try {
-    const destacadas = await Publicacion.listarDestacadas({ limite: 4 })
-    const recientes  = await Publicacion.listarRecientes({ limite: 8 })
+    const soloPublicas = !req.session.usuario
+    const destacadas = await Publicacion.listarDestacadas({ limite: 4, soloPublicas })
+    const recientes  = await Publicacion.listarRecientes({ limite: 8, soloPublicas })
 
     res.render('index', {
       titulo: 'Inicio',

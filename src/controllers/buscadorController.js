@@ -10,7 +10,7 @@ const buscadorController = {
         const paginaActual = parseInt(pagina) || 1
         const offset  = (paginaActual - 1) * limite
 
-        const filtros = { q, etiqueta, licencia, valoracion_min, orden, limite, offset }
+        const filtros = { q, etiqueta, licencia, valoracion_min, orden, limite, offset, soloPublicas: !req.session.usuario }
 
         try {
         const [publicaciones, total] = await Promise.all([

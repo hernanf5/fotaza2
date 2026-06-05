@@ -70,24 +70,29 @@ class Publicacion {
         return rows
     }
 
-    static async listarRecientes({ limite = 20, offset = 0 } = {}) {
+    static async listarRecientes({ limite = 20, offset = 0, soloPublicas = false } = {}) {
+        const filtroLicencia = soloPublicas
+            ? `AND NOT EXISTS (SELECT 1 FROM imagen WHERE publicacion_id = p.id AND licencia = 'copyright')`
+            : ''
+
         const [rows] = await pool.query(
-        `SELECT p.*, u.username,
-                pe.avatar_url,
-                (SELECT url FROM imagen WHERE publicacion_id = p.id LIMIT 1) as imagen_portada,
-                (SELECT COUNT(*) FROM comentario WHERE publicacion_id = p.id AND activo = 1) as total_comentarios
-        FROM publicacion p
-        JOIN usuario u ON u.id = p.usuario_id
-        JOIN persona pe ON pe.id = u.persona_id
-        WHERE p.estado = 0
-        ORDER BY p.created_at DESC
-        LIMIT ? OFFSET ?`,
-        [limite, offset]
+            `SELECT p.*, u.username,
+                    pe.avatar_url,
+                    (SELECT url FROM imagen WHERE publicacion_id = p.id LIMIT 1) as imagen_portada,
+                    (SELECT COUNT(*) FROM comentario WHERE publicacion_id = p.id AND activo = 1) as total_comentarios
+            FROM publicacion p
+            JOIN usuario u ON u.id = p.usuario_id
+            JOIN persona pe ON pe.id = u.persona_id
+            WHERE p.estado = 0 ${filtroLicencia}
+            ORDER BY p.created_at DESC
+            LIMIT ? OFFSET ?`,
+            [limite, offset]
         )
         return rows
     }
 
-    static async listarDestacadas({ limite = 6 } = {}) {
+    static async listarDestacadas({ limite = 6, soloPublicas = false } = {}) {
+        const filtroLicencia = soloPublicas ? `AND NOT EXISTS (SELECT 1 FROM imagen WHERE publicacion_id = p.id AND licencia = 'copyright')` : ''
         const [rows] = await pool.query(
         `SELECT p.*, u.username,
                 pe.avatar_url,
@@ -101,6 +106,7 @@ class Publicacion {
         WHERE p.estado = 0
             AND i.total_valoraciones >= 3
             AND i.valoracion_promedio >= 3.5
+            ${filtroLicencia}
         ORDER BY i.valoracion_promedio DESC, i.total_valoraciones DESC
         LIMIT ?`,
         [limite]

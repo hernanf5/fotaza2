@@ -66,43 +66,49 @@ block contenido
       //- Imágenes
       div(class='flex flex-col gap-6 mb-10')
         each imagen in imagenes
-          div(class='bg-surface rounded-xl overflow-hidden border border-outline-variant')
-            img(src=imagen.url alt=publicacion.titulo class='w-full object-cover')
-            div(class='p-4 flex items-center justify-between')
-              div(class='flex items-center gap-2')
-                span(class='material-symbols-outlined text-primary text-base') star
-                span(class='text-on-surface text-sm font-medium')= imagen.valoracion_promedio.toFixed(1)
-                span(class='text-on-surface-variant text-sm')= '(' + imagen.total_valoraciones + ' valoraciones)'
-              div(class='flex items-center gap-2')
-                if imagen.licencia === 'copyright'
-                  span(class='flex items-center gap-1 text-xs bg-surface-container text-on-surface-variant px-2 py-1 rounded-full')
-                    span(class='material-symbols-outlined text-xs') copyright
-                    | Copyright
-                else
-                  span(class='flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full')
-                    span(class='material-symbols-outlined text-xs') lock_open
-                    | Libre uso
-                if usuario && usuario.id !== publicacion.usuario_id
-                  div(class='flex items-center gap-3')
-                    form(action='/imagenes/' + imagen.id + '/valorar' method='POST' class='flex items-center gap-1')
-                      each estrella in [1,2,3,4,5]
+          if imagen.licencia === 'libre' || usuario
+            div(class='bg-surface rounded-xl overflow-hidden border border-outline-variant')
+              img(src=imagen.url alt=publicacion.titulo class='w-full object-cover')
+              div(class='p-4 flex items-center justify-between')
+                div(class='flex items-center gap-2')
+                  span(class='material-symbols-outlined text-primary text-base') star
+                  span(class='text-on-surface text-sm font-medium')= imagen.valoracion_promedio.toFixed(1)
+                  span(class='text-on-surface-variant text-sm')= '(' + imagen.total_valoraciones + ' valoraciones)'
+                div(class='flex items-center gap-2')
+                  if imagen.licencia === 'copyright'
+                    span(class='flex items-center gap-1 text-xs bg-surface-container text-on-surface-variant px-2 py-1 rounded-full')
+                      span(class='material-symbols-outlined text-xs') copyright
+                      | Copyright
+                  else
+                    span(class='flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full')
+                      span(class='material-symbols-outlined text-xs') lock_open
+                      | Libre uso
+                  if usuario && usuario.id !== publicacion.usuario_id
+                    div(class='flex items-center gap-3')
+                      form(action='/imagenes/' + imagen.id + '/valorar' method='POST' class='flex items-center gap-1')
+                        each estrella in [1,2,3,4,5]
+                          button(
+                            type='submit'
+                            name='puntuacion'
+                            value=estrella
+                            class='text-on-surface-variant hover:text-primary transition-colors'
+                          )
+                            span(class='material-symbols-outlined text-lg') star
+                      form(action='/imagenes/' + imagen.id + '/me-interesa' method='POST')
                         button(
                           type='submit'
-                          name='puntuacion'
-                          value=estrella
-                          class='text-on-surface-variant hover:text-primary transition-colors'
+                          class='flex items-center gap-1 bg-primary text-on-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary-container transition-colors font-medium'
                         )
-                          span(class='material-symbols-outlined text-lg') star
-                    form(action='/imagenes/' + imagen.id + '/me-interesa' method='POST')
-                      button(
-                        type='submit'
-                        class='flex items-center gap-1 bg-primary text-on-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary-container transition-colors font-medium'
-                      )
-                        span(class='material-symbols-outlined text-sm') favorite
-                        | Me interesa
-                    a(href='/colecciones/elegir/' + publicacion.id class='flex items-center gap-1 bg-surface-container text-on-surface-variant text-xs px-3 py-1.5 rounded-lg hover:bg-surface-container-high hover:text-primary transition-colors font-medium')
-                      span(class='material-symbols-outlined text-sm') bookmark
-                      | Guardar
+                          span(class='material-symbols-outlined text-sm') favorite
+                          | Me interesa
+                      a(href='/colecciones/elegir/' + publicacion.id class='flex items-center gap-1 bg-surface-container text-on-surface-variant text-xs px-3 py-1.5 rounded-lg hover:bg-surface-container-high hover:text-primary transition-colors font-medium')
+                        span(class='material-symbols-outlined text-sm') bookmark
+                        | Guardar
+          else
+            div(class='bg-surface-container rounded-xl p-8 border border-outline-variant text-center')
+              span(class='material-symbols-outlined text-4xl text-on-surface-variant') lock
+              p(class='text-on-surface-variant text-sm mt-2') Esta imagen está protegida con copyright.
+              a(href='/login' class='text-primary text-sm font-medium mt-2 inline-block') Iniciá sesión para verla
 
       //- Descripción
       if publicacion.descripcion
