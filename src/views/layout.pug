@@ -66,5 +66,18 @@ html(class='dark' lang='es')
         background: rgba(16, 29, 34, 0.8);
         backdrop-filter: blur(12px);
       }
+      #mensajes-container::-webkit-scrollbar {
+        width: 4px;
+      }
+      #mensajes-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #mensajes-container::-webkit-scrollbar-thumb {
+        background: #333333;
+        border-radius: 4px;
+      }
+      #mensajes-container::-webkit-scrollbar-thumb:hover {
+        background: #D4AF37;
+      }
   body(class='bg-background text-on-background font-body antialiased')
     block contenido

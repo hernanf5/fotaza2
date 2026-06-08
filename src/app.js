@@ -16,10 +16,64 @@ const denunciaRoutes = require('./routes/denuncias')
 const Publicacion = require('./models/Publicacion')
 const validadorRoutes = require('./routes/validador')
 const siguiendoRoutes = require('./routes/siguiendo')
+const http = require('http')
+const { Server } = require('socket.io')
+
+
 
 require('dotenv').config()
 
 const app = express()
+
+const server = http.createServer(app)
+const io = new Server(server)
+
+// Socket.IO para chat en tiempo real
+io.on('connection', (socket) => {
+
+  // El usuario se une a su sala privada
+  socket.on('join', (usuario_id) => {
+    socket.join('usuario_' + usuario_id)
+  })
+
+  // Cuando alguien envía un mensaje
+  socket.on('mensaje', async (data) => {
+    const { remitente_id, destinatario_id, contenido, imagen_id } = data
+
+    try {
+      const nuevoMensaje = await Mensaje.crear({
+        remitente_id,
+        destinatario_id,
+        imagen_id: imagen_id || null,
+        contenido,
+      })
+
+      await Notificacion.crear({
+        usuario_id:        destinatario_id,
+        origen_usuario_id: remitente_id,
+        tipo:              'mensaje',
+        referencia_id:     destinatario_id,
+      })
+
+      const mensajeCompleto = {
+        id:                  nuevoMensaje,
+        remitente_id,
+        destinatario_id,
+        contenido,
+        created_at:          new Date(),
+        remitente_username:  data.remitente_username,
+      }
+
+      // Enviar el mensaje a ambos usuarios
+      io.to('usuario_' + remitente_id).emit('mensaje_nuevo', mensajeCompleto)
+      io.to('usuario_' + destinatario_id).emit('mensaje_nuevo', mensajeCompleto)
+
+    } catch (error) {
+      console.error('Error al guardar mensaje:', error)
+    }
+  })
+
+})
 
 // Motor de vistas
 app.set('view engine', 'pug')
@@ -102,7 +156,7 @@ app.use('/', siguiendoRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })
 

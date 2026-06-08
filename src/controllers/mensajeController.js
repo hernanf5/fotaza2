@@ -38,6 +38,12 @@ const mensajeController = {
 
             // Marcar mensajes como leídos
             await Mensaje.marcarComoLeidos(otro_usuario.id, req.session.usuario.id)
+            // Marcar notificaciones relacionadas como leídas
+            await Notificacion.marcarLeidasPorTipoYOrigen(
+                req.session.usuario.id,
+                'mensaje',
+                otro_usuario.id
+            )
 
             res.render('mensajes/conversacion', {
                 titulo: 'Conversación con @' + otro_usuario.username,

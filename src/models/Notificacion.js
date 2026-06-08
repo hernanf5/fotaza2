@@ -50,6 +50,14 @@ class Notificacion {
         )
     }
 
+    static async marcarLeidasPorTipoYOrigen(usuario_id, tipo, origen_usuario_id) {
+        await pool.query(
+            `UPDATE notificacion SET leida = 1
+            WHERE usuario_id = ? AND tipo = ? AND origen_usuario_id = ?`,
+            [usuario_id, tipo, origen_usuario_id]
+        )
+    }
+
 }
 
 module.exports = Notificacion
