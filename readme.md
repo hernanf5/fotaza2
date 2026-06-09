@@ -1,5 +1,3 @@
-## PROXIMAMENTE ##
-
 ## Usuarios de prueba
 
 ### Usuarios estándar
@@ -16,3 +14,7 @@
 ### Validador
 
 | validador | validador@fotaza.com | password123 |
+
+## Demo en producción
+
+🌐 [https://fotaza2-production-51ef.up.railway.app](https://fotaza2-production-51ef.up.railway.app)
