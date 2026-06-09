@@ -53,7 +53,7 @@ block contenido
 
                 div
                   p(class='text-on-surface text-sm')
-                    span(class='font-medium')= '@' + notif.origen_username
+                    a(href='/usuarios/' + notif.origen_usuario_id class='font-medium hover:text-primary transition-colors')= '@' + notif.origen_username
                     if notif.tipo === 'comentario'
                       |  comentó tu publicación
                     else if notif.tipo === 'valoracion'
