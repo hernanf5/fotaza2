@@ -139,6 +139,38 @@ const denunciaController = {
         }
     },
 
+    // GET /publicaciones/:id/denuncias-comentarios
+    async verDenunciasComentarios(req, res) {
+        const publicacion_id = req.params.id
+
+        try {
+            const publicacion = await Publicacion.buscarPorId(publicacion_id)
+
+            if (!publicacion) {
+                req.flash('error', 'Publicación no encontrada')
+                return res.redirect('/')
+            }
+
+            if (publicacion.usuario_id !== req.session.usuario.id) {
+                req.flash('error', 'No tenés permiso para ver esto')
+                return res.redirect('/publicaciones/' + publicacion_id)
+            }
+
+            const comentarios = await Denuncia.obtenerComentariosDenunciadosDePublicacion(publicacion_id)
+
+            res.render('denuncias/comentarios_denunciados', {
+                titulo:      'Denuncias de comentarios',
+                publicacion,
+                comentarios,
+            })
+
+        } catch (error) {
+            console.error(error)
+            req.flash('error', 'Ocurrió un error')
+            res.redirect('/publicaciones/' + publicacion_id)
+        }
+    },
+
 }
 
 module.exports = denunciaController

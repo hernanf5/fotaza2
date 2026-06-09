@@ -97,6 +97,38 @@ class Denuncia {
         return rows
     }
 
+    static async obtenerComentariosDenunciadosDePublicacion(publicacion_id) {
+        // Primero obtenemos los comentarios denunciados
+        const [comentarios] = await pool.query(
+            `SELECT c.id as comentario_id, c.contenido, c.created_at as comentario_fecha,
+                    u.username as autor_comentario, u.id as autor_id,
+                    COUNT(dc.id) as total_denuncias
+            FROM comentario c
+            JOIN usuario u ON u.id = c.usuario_id
+            JOIN denuncia_comentario dc ON dc.comentario_id = c.id
+            WHERE c.publicacion_id = ? AND c.activo = 1
+            GROUP BY c.id
+            ORDER BY total_denuncias DESC`,
+            [publicacion_id]
+        )
+
+        // Para cada comentario obtenemos sus denuncias
+        for (const comentario of comentarios) {
+            const [denuncias] = await pool.query(
+            `SELECT m.descripcion as motivo, dc.descripcion, u.username as usuario
+            FROM denuncia_comentario dc
+            JOIN motivo_denuncia m ON m.id = dc.motivo_id
+            JOIN usuario u ON u.id = dc.usuario_id
+            WHERE dc.comentario_id = ?`,
+            [comentario.comentario_id]
+            )
+            comentario.denuncias = denuncias
+        }
+        console.log('publicacion_id buscado:', publicacion_id)
+        console.log('comentarios encontrados:', comentarios)
+        return comentarios
+    }
+
 }
 
 module.exports = Denuncia
