@@ -43,23 +43,19 @@ async function procesarImagenes(req, res, next) {
       const rutaSalida = path.join(destino, nombre)
 
       if (licencia === 'copyright' && marcaAguaTexto && marcaAguaTexto.trim()) {
-        // Usar Jimp para la marca de agua — compatible con cualquier OS
-        const imagen = await Jimp.read(file.buffer)
-        const ancho = imagen.bitmap.width
-        const alto = imagen.bitmap.height
+        const Jimp = require('jimp')
 
-        const fontSize = ancho > 1000 ? Jimp.FONT_SANS_64_WHITE : Jimp.FONT_SANS_32_WHITE
-        const font = await Jimp.loadFont(fontSize)
+        const imagen   = await Jimp.read(file.buffer)
+        const ancho    = imagen.bitmap.width
+        const fontName = ancho > 1000 ? Jimp.FONT_SANS_64_WHITE : Jimp.FONT_SANS_32_WHITE
+        const font     = await Jimp.loadFont(fontName)
 
-        // Calcular posición centrada
         const textoAncho = Jimp.measureText(font, marcaAguaTexto.trim())
         const textoAlto  = Jimp.measureTextHeight(font, marcaAguaTexto.trim(), ancho)
-
-        const x = (ancho - textoAncho) / 2
-        const y = (alto - textoAlto) / 2
+        const x          = Math.max(0, (ancho - textoAncho) / 2)
+        const y          = Math.max(0, (imagen.bitmap.height - textoAlto) / 2)
 
         imagen.print(font, x, y, marcaAguaTexto.trim())
-        imagen.opacity(0.6)
 
         const buffer = await imagen.getBufferAsync(Jimp.MIME_JPEG)
         fs.writeFileSync(rutaSalida, buffer)
