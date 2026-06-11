@@ -71,7 +71,7 @@ La aplicación queda disponible en **http://localhost:3000**
 ### Usuarios estándar
 
 | Usuario | Email | Contraseña |
-
+|---|---|---|
 | usuario1 | usuario1@fotaza.com | password123 |
 | usuario2 | usuario2@fotaza.com | password123 |
 | usuario4 | usuario4@fotaza.com | password123 |
@@ -81,6 +81,8 @@ La aplicación queda disponible en **http://localhost:3000**
 
 ### Validador
 
+| Usuario | Email | Contraseña |
+|---|---|---|
 | validador | validador@fotaza.com | password123 |
 
 ## Demo en producción
