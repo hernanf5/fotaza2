@@ -74,7 +74,7 @@ block contenido
         each imagen in imagenes
           if imagen.licencia === 'libre' || usuario
             div(class='bg-surface rounded-xl overflow-hidden border border-outline-variant')
-              img(src=imagen.url alt=publicacion.titulo class='w-full object-cover')
+              img(src=imagen.url alt=publicacion.titulo class='w-full object-contain max-h-[70vh]')
               div(class='p-4 flex items-center justify-between')
                 div(class='flex items-center gap-2')
                   span(class='material-symbols-outlined text-primary text-base') star
