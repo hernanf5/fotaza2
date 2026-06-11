@@ -23,19 +23,6 @@ const fileFilter = (req, file, cb) => {
 }
 
 
-
-// const storage = multer.diskStorage({
-//   destination(req, file, cb) {
-//     cb(null, destino)
-//   },
-//   filename(req, file, cb) {
-//     const ext       = path.extname(file.originalname)
-//     const nombre    = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext
-//     cb(null, nombre)
-//   },
-// })
-
-
 const upload = multer({
   storage,
   fileFilter,
@@ -69,20 +56,16 @@ async function procesarImagenes(req, res, next) {
         // SVG con el texto de marca de agua
         const svg = Buffer.from(`
           <svg width="${ancho}" height="${alto}">
-            <style>
-              text {
-                font-family: Arial, sans-serif;
-                font-size: ${fontSize}px;
-                font-weight: bold;
-                fill: rgba(255, 255, 255, 0.6);
-              }
-            </style>
             <text
               x="50%"
               y="50%"
               text-anchor="middle"
               dominant-baseline="middle"
               transform="rotate(-30, ${ancho/2}, ${alto/2})"
+              font-size="${fontSize}"
+              font-weight="bold"
+              fill="rgba(255, 255, 255, 0.6)"
+              font-family="sans-serif"
             >${marcaAguaTexto.trim()}</text>
           </svg>
         `)
