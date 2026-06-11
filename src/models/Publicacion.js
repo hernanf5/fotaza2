@@ -162,6 +162,28 @@ class Publicacion {
         return rows
     }
 
-}
+    static async actualizar({ id, titulo, descripcion }) {
+        await pool.query(
+            `UPDATE publicacion SET titulo = ?, descripcion = ? WHERE id = ?`,
+            [titulo, descripcion || null, id]
+            )
+        }
+
+        static async eliminar(id) {
+            await pool.query(
+                `DELETE FROM publicacion WHERE id = ?`,
+                [id]
+            )
+        }
+
+        static async tieneDenuncias(id) {
+            const [rows] = await pool.query(
+                `SELECT COUNT(*) as total FROM denuncia_publicacion WHERE publicacion_id = ?`,
+                [id]
+            )
+            return parseInt(rows[0].total) > 0
+        }
+
+    }
 
 module.exports = Publicacion

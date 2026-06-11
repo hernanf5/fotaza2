@@ -3,6 +3,7 @@ const Imagen = require('../models/Imagen')
 const Comentario = require('../models/Comentario')
 const path = require('path')
 const fs = require('fs')
+const pool = require('../database/connection')
 
 const publicacionController = {
 
@@ -103,6 +104,105 @@ const publicacionController = {
         }
     },
 
+    // GET /publicaciones/:id/editar
+    async mostrarEdicion(req, res) {
+        try {
+            const publicacion = await Publicacion.buscarPorId(req.params.id)
+
+            if (!publicacion) {
+                req.flash('error', 'Publicación no encontrada')
+                return res.redirect('/')
+            }
+
+            if (publicacion.usuario_id !== req.session.usuario.id) {
+                req.flash('error', 'No tenés permiso para editar esta publicación')
+                return res.redirect('/publicaciones/' + req.params.id)
+            }
+
+            const tieneDenuncias = await Publicacion.tieneDenuncias(req.params.id)
+            if (tieneDenuncias) {
+                req.flash('error', 'No podés editar una publicación que tiene denuncias')
+                return res.redirect('/publicaciones/' + req.params.id)
+            }
+
+            const etiquetas = await Publicacion.obtenerEtiquetas(req.params.id)
+
+            res.render('publicaciones/editar', {
+                titulo: 'Editar publicación',
+                publicacion,
+                etiquetas,
+            })
+
+        } catch (error) {
+            console.error(error)
+            req.flash('error', 'Ocurrió un error')
+            res.redirect('/')
+        }
+    },
+
+// POST /publicaciones/:id/editar
+    async editar(req, res) {
+    const { titulo, descripcion, etiquetas } = req.body
+    const id = req.params.id
+
+    if (!titulo) {
+        req.flash('error', 'El título es obligatorio')
+        return res.redirect('/publicaciones/' + id + '/editar')
+    }
+
+    try {
+        const publicacion = await Publicacion.buscarPorId(id)
+
+        if (!publicacion || publicacion.usuario_id !== req.session.usuario.id) {
+            req.flash('error', 'No tenés permiso para editar esta publicación')
+            return res.redirect('/')
+        }
+
+        const tieneDenuncias = await Publicacion.tieneDenuncias(id)
+        if (tieneDenuncias) {
+            req.flash('error', 'No podés editar una publicación que tiene denuncias')
+            return res.redirect('/publicaciones/' + id)
+        }
+
+        await Publicacion.actualizar({ id, titulo, descripcion })
+
+        // Actualizar etiquetas
+        if (etiquetas) {
+            await pool.query(`DELETE FROM publicacion_etiqueta WHERE publicacion_id = ?`, [id])
+            const lista = etiquetas.split(',').filter(e => e.trim())
+            await Publicacion.agregarEtiquetas(id, lista)
+        }
+
+        req.flash('success', 'Publicación actualizada correctamente')
+        res.redirect('/publicaciones/' + id)
+
+    } catch (error) {
+        console.error(error)
+        req.flash('error', 'Ocurrió un error al editar la publicación')
+        res.redirect('/publicaciones/' + id)
+    }
+    },
+
+    // POST /publicaciones/:id/eliminar
+    async eliminar(req, res) {
+    try {
+        const publicacion = await Publicacion.buscarPorId(req.params.id)
+
+        if (!publicacion || publicacion.usuario_id !== req.session.usuario.id) {
+            req.flash('error', 'No tenés permiso para eliminar esta publicación')
+            return res.redirect('/')
+        }
+
+        await Publicacion.eliminar(req.params.id)
+        req.flash('success', 'Publicación eliminada correctamente')
+        res.redirect('/')
+
+        } catch (error) {
+            console.error(error)
+            req.flash('error', 'Ocurrió un error al eliminar la publicación')
+            res.redirect('/')
+        }
+    },
 }
 
 module.exports = publicacionController
