@@ -45,15 +45,15 @@ async function procesarImagenes(req, res, next) {
       if (licencia === 'copyright' && marcaAguaTexto && marcaAguaTexto.trim()) {
         const Jimp = require('jimp')
 
-        const imagen   = await Jimp.read(file.buffer)
-        const ancho    = imagen.bitmap.width
+        const imagen = await Jimp.read(file.buffer)
+        const ancho = imagen.bitmap.width
         const fontName = ancho > 1000 ? Jimp.FONT_SANS_64_WHITE : Jimp.FONT_SANS_32_WHITE
-        const font     = await Jimp.loadFont(fontName)
+        const font = await Jimp.loadFont(fontName)
 
         const textoAncho = Jimp.measureText(font, marcaAguaTexto.trim())
         const textoAlto  = Jimp.measureTextHeight(font, marcaAguaTexto.trim(), ancho)
-        const x          = Math.max(0, (ancho - textoAncho) / 2)
-        const y          = Math.max(0, (imagen.bitmap.height - textoAlto) / 2)
+        const x = Math.max(0, (ancho - textoAncho) / 2)
+        const y = Math.max(0, (imagen.bitmap.height - textoAlto) / 2)
 
         imagen.print(font, x, y, marcaAguaTexto.trim())
 
