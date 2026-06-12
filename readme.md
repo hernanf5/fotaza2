@@ -127,6 +127,6 @@ Pug es muy sensible a la indentación y mezclar tabs con espacios al copiar cód
 **11. Variables de entorno no cargando en producción**
 Al deployar en Railway, las variables de entorno del `.env` local no se transferían automáticamente. Lo resolví configurando cada variable manualmente desde el panel de Railway en la sección Variables del servicio.
 
-**12. Marca de agua en producción
-En desarrollo local (Windows) la marca de agua funcionaba correctamente usando `Arial, sans-serif`. En producción (Linux en Railway) las fuentes del sistema son diferentes y generaba caracteres incorrectos. **Solución:** cambiar el SVG para usar atributos inline en lugar de `<style>` y reemplazar `Arial, sans-serif` por `sans-serif` genérico, que siempre está disponible en cualquier sistema operativo.
+**7. Marca de agua incompatible con Linux (Sharp + SVG)**
+La implementación inicial usaba `sharp` con un SVG para renderizar el texto de la marca de agua. En desarrollo local (Windows) funcionaba correctamente, pero en producción (Linux en Railway) el texto se mostraba como cuadrados sin contenido, ya que `sharp` depende de `librsvg` para renderizar SVG con texto, y esa librería no está disponible por defecto en el entorno de Railway. Se reemplazó el enfoque por la librería `jimp` (v0.22.12), que es pura JavaScript y no depende de librerías externas del sistema operativo para renderizar texto. Se probaron versiones más recientes de Jimp (1.x), pero presentaban errores de compatibilidad con las fuentes bitmap incluidas (`TypeError: Cannot read properties of undefined`), por lo que se fijó la versión 0.22.12 que es estable y compatible tanto con Windows como con Linux.
 
